@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include("./partials/head.ejs", { title: "Sign up - File Uploader", styles: ["form.css"] }) %>
+    <body>
+        <%- include("./partials/header.ejs") %>
+        <main>
+            <section class="form-container">
+                <h1>Sign up</h1>
+                <form action="/sign-up" method="post">
+                    <div>
+                        <label for="username">Username *</label>
+                        <input type="text" name="username" id="username" value="<%= locals.username %>" autocomplete="username" required>
+                        <% if (locals.usernameError) { %>
+                            <div class="error"><%= locals.usernameError %></div>
+                        <% } %>
+                    </div>
+                    <div>
+                        <label for="password">Password *</label>
+                        <input type="password" name="password" id="password" autocomplete="new-password" required>
+                        <% if (locals.passwordError) { %>
+                            <div class="error"><%= locals.passwordError %></div>
+                        <% } %>
+                    </div>
+                    <div>
+                        <label for="confirmPassword">Confirm password *</label>
+                        <input type="password" name="confirmPassword" id="confirmPassword" autocomplete="new-password" required>
+                        <% if (locals.confirmPasswordError) { %>
+                            <div class="error"><%= locals.confirmPasswordError %></div>
+                        <% } %>
+                    </div>
+                    <button type="submit" class="main-button">Sign up</button>
+                    <p>Already have an account? <a href="/log-in">Log in</a></p>
+                </form>
+            </section>
+        </main>
+        <%- include("./partials/footer.ejs") %>
+    </body>
+</html>

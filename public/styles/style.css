@@ -1,0 +1,110 @@
+:root {
+    --border: 1px solid #1e293b;
+}
+
+body {
+    min-height: 100dvh;
+    background: linear-gradient(50deg, #0f172a, #0a0a0a);
+    color: #f5f5f5;
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Oxygen,
+        Ubuntu,
+        Cantarell,
+        "Open Sans",
+        "Helvetica Neue",
+        sans-serif;
+    display: grid;
+    grid-template-rows: min-content 1fr min-content;
+}
+
+header, main, footer {
+    padding: 15px;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    height: min-content;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    background-color: #0a0a0a33;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    border-bottom: var(--border);
+    z-index: 1;
+}
+
+nav > ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    gap: 15px;
+}
+
+:any-link {
+    color: unset;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.logo a, nav a {
+    text-decoration: none;
+    display: block;
+}
+
+footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 5px;
+}
+
+footer > :last-child {
+    transition: transform 200ms;
+}
+
+footer > :last-child:hover {
+    transform: scale(1.2);
+}
+
+/* General classes */
+.main-button, .secondary-button {
+    padding: 6px 12px 6px 12px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.main-button:hover, .secondary-button:hover {
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 200ms;
+}
+
+.main-button {
+    background-color: #f5f5f5;
+    color: #0a0a0a;
+    box-shadow: inset 0px -2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.secondary-button {
+    background-color: #171717;
+    color: inherit;
+    border: var(--border);
+}
