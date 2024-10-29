@@ -63,6 +63,14 @@ passport.deserializeUser(async (id, done) => {
 app.use(passport.session());
 
 app.use((req, res, next) => {
+    try {
+        decodeURIComponent(req.url);
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+app.use((req, res, next) => {
     res.locals.user = req.user || null;
     next();
 });
