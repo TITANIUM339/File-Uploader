@@ -8,6 +8,7 @@ import prisma from "./lib/client.js";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcryptjs";
+import signupRouter from "./routes/signup.js";
 
 const PORT = process.env.PORT || 80;
 
@@ -60,5 +61,16 @@ passport.deserializeUser(async (id, done) => {
     }
 });
 app.use(passport.session());
+
+app.use((req, res, next) => {
+    res.locals.user = req.user || null;
+    next();
+});
+app.use((req, res, next) => {
+    res.locals.year = new Date().getFullYear();
+    next();
+});
+
+app.use("/sign-up", signupRouter);
 
 app.listen(PORT, () => console.log(`Serving on: http://localhost:${PORT}`));
