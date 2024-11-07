@@ -13,7 +13,7 @@ main {
     width: 100%;
 }
 
-form {
+.form-container form {
     margin-top: 20px;
     display: flex;
     flex-direction: column;

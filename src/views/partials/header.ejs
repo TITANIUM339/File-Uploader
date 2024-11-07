@@ -4,14 +4,15 @@
     </div>
     <nav>
         <ul>
-            <li><a href="/log-in" class="secondary-button">Log in</a></li>
-            <li><a href="/sign-up" class="main-button">Sign up</a></li>
             <% if (user) { %>
                 <li>
                     <form action="/log-out" method="post">
-                        <button type="submit">Log out</button>
+                        <button type="submit" class="secondary-button">Log out</button>
                     </form>
                 </li>
+            <% } else { %>
+                <li><a href="/log-in" class="secondary-button">Log in</a></li>
+                <li><a href="/sign-up" class="main-button">Sign up</a></li>
             <% } %>
         </ul>
     </nav>
