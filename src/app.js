@@ -9,6 +9,7 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcryptjs";
 import signupRouter from "./routes/signup.js";
+import loginRouter from "./routes/login.js";
 
 const PORT = process.env.PORT || 80;
 
@@ -80,5 +81,6 @@ app.use((req, res, next) => {
 });
 
 app.use("/sign-up", signupRouter);
+app.use("/log-in", loginRouter);
 
 app.listen(PORT, () => console.log(`Serving on: http://localhost:${PORT}`));
