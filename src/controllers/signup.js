@@ -1,5 +1,5 @@
 import { matchedData, validationResult } from "express-validator";
-import { validateLogin } from "../lib/validation.js";
+import { validateSignup } from "../lib/validation.js";
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
 import prisma from "../lib/client.js";
@@ -9,7 +9,7 @@ const signup = {
         res.render("signup");
     },
     post: [
-        validateLogin(),
+        validateSignup(),
         asyncHandler(async (req, res, next) => {
             const error = validationResult(req);
 

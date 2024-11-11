@@ -12,7 +12,7 @@ function getOneTimeNext(next) {
     };
 }
 
-function validateLogin() {
+function validateSignup() {
     return [
         (req, res, next) => {
             const oneTimeNext = getOneTimeNext(next);
@@ -50,4 +50,4 @@ function validateLogin() {
     ];
 }
 
-export { validateLogin };
+export { validateSignup };
