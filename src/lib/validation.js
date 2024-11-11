@@ -50,4 +50,11 @@ function validateSignup() {
     ];
 }
 
-export { validateSignup };
+function validateLogin() {
+    return [
+        body("username").notEmpty().withMessage("Can't be empty"),
+        body("password").notEmpty().withMessage("Can't be empty"),
+    ];
+}
+
+export { validateSignup, validateLogin };
