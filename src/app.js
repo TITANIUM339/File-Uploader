@@ -40,7 +40,7 @@ passport.use(
                 where: { username },
             });
 
-            if (!user && !(await bcrypt.compare(password, user.passwordHash))) {
+            if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
                 done(null, false, { message: "Invalid username or password" });
                 return;
             }
