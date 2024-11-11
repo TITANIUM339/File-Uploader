@@ -16,7 +16,7 @@
                     </div>
                     <div>
                         <label for="password">Password *</label>
-                        <input type="password" name="password" id="password" autocomplete="new-password" required>
+                        <input type="password" name="password" id="password" autocomplete="current-password" required>
                         <% if (locals.passwordError) { %>
                             <div class="error"><%= locals.passwordError %></div>
                         <% } %>
