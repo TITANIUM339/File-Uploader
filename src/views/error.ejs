@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./partials/head.ejs", { title: "Error - File Uploader", styles: ["error.css"] }) %>
+    <body>
+        <%- include("./partials/header.ejs") %>
+        <main>
+            <section>
+                <h1><%= error.statusCode %>: <%= error.name %></h1>
+                <p><%= error.message %></p>
+            </section>
+        </main>
+        <%- include("./partials/footer.ejs") %>
+    </body>
+</html>
