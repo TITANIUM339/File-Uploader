@@ -11,6 +11,7 @@ import bcrypt from "bcryptjs";
 import signupRouter from "./routes/signup.js";
 import loginRouter from "./routes/login.js";
 import logoutRouter from "./routes/logout.js";
+import HttpError from "./lib/HttpError.js";
 
 const PORT = process.env.PORT || 80;
 
@@ -65,14 +66,6 @@ passport.deserializeUser(async (id, done) => {
 app.use(passport.session());
 
 app.use((req, res, next) => {
-    try {
-        decodeURIComponent(req.url);
-        next();
-    } catch (err) {
-        next(err);
-    }
-});
-app.use((req, res, next) => {
     res.locals.user = req.user || null;
     next();
 });
@@ -80,9 +73,43 @@ app.use((req, res, next) => {
     res.locals.year = new Date().getFullYear();
     next();
 });
+app.use((req, res, next) => {
+    try {
+        decodeURIComponent(req.url);
+        next();
+    } catch {
+        next(new HttpError("Bad Request", "You've entered a malformed URL", 400));
+    }
+});
 
 app.use("/sign-up", signupRouter);
 app.use("/log-in", loginRouter);
 app.use("/log-out", logoutRouter);
+
+app.use((req, res, next) =>
+    next(
+        new HttpError(
+            "Not Found",
+            "The page you were looking for doesn't exist",
+            404,
+        ),
+    ),
+);
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+    if (err.statusCode) {
+        res.status(err.statusCode).render("error", { error: err });
+    } else {
+        console.error(err);
+
+        const error = new HttpError(
+            "Internal Server Error",
+            "An unexpected error has occurred",
+            500,
+        );
+
+        res.status(error.statusCode).render("error", { error });
+    }
+});
 
 app.listen(PORT, () => console.log(`Serving on: http://localhost:${PORT}`));
