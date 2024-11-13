@@ -83,6 +83,6 @@ app.use((req, res, next) => {
 
 app.use("/sign-up", signupRouter);
 app.use("/log-in", loginRouter);
-app.use("/log-out", logoutRouter)
+app.use("/log-out", logoutRouter);
 
 app.listen(PORT, () => console.log(`Serving on: http://localhost:${PORT}`));

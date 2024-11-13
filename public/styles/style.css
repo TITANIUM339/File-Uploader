@@ -22,7 +22,9 @@ body {
     grid-template-rows: min-content 1fr min-content;
 }
 
-header, main, footer {
+header,
+main,
+footer {
     padding: 15px;
 }
 
@@ -60,7 +62,8 @@ nav > ul {
     text-align: center;
 }
 
-.logo a, nav a {
+.logo a,
+nav a {
     text-decoration: none;
     display: block;
 }
@@ -83,7 +86,8 @@ footer > :last-child:hover {
 }
 
 /* General classes */
-.main-button, .secondary-button {
+.main-button,
+.secondary-button {
     padding: 6px 12px 6px 12px;
     border: none;
     border-radius: 5px;
@@ -91,7 +95,8 @@ footer > :last-child:hover {
     text-align: center;
 }
 
-.main-button:hover, .secondary-button:hover {
+.main-button:hover,
+.secondary-button:hover {
     cursor: pointer;
     opacity: 0.8;
     transition: opacity 200ms;

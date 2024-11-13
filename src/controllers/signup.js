@@ -48,7 +48,7 @@ const signup = {
                 }
 
                 res.redirect("/");
-            })
+            });
         }),
     ],
 };

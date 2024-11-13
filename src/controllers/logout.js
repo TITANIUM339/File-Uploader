@@ -8,7 +8,7 @@ const logout = {
 
             res.redirect("/log-in");
         });
-    }
+    },
 };
 
 export { logout };
