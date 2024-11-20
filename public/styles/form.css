@@ -47,27 +47,3 @@ input {
 p {
     text-align: center;
 }
-
-p a {
-    text-decoration: none;
-    position: relative;
-    font-weight: 500;
-    white-space: nowrap;
-}
-
-p a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 2px;
-    width: 100%;
-    height: 1px;
-    background-color: white;
-    opacity: 0.8;
-    transition: transform 300ms;
-    transform-origin: right;
-}
-
-p a:hover::after {
-    transform: scaleX(0);
-}
