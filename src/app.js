@@ -8,6 +8,7 @@ import prisma from "./lib/client.js";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcryptjs";
+import indexRouter from "./routes/index.js";
 import signupRouter from "./routes/signup.js";
 import loginRouter from "./routes/login.js";
 import logoutRouter from "./routes/logout.js";
@@ -85,6 +86,7 @@ app.use((req, res, next) => {
     }
 });
 
+app.use("/", indexRouter);
 app.use("/sign-up", signupRouter);
 app.use("/log-in", loginRouter);
 app.use("/log-out", logoutRouter);
