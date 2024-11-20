@@ -5,7 +5,7 @@ const index = {
         } else {
             res.redirect("/log-in");
         }
-    }
-}
+    },
+};
 
 export { index };
