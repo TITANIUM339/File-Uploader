@@ -12,6 +12,7 @@ import signupRouter from "./routes/signup.js";
 import loginRouter from "./routes/login.js";
 import logoutRouter from "./routes/logout.js";
 import HttpError from "./lib/HttpError.js";
+import homeRouter from "./routes/home.js";
 
 const PORT = process.env.PORT || 80;
 
@@ -78,13 +79,16 @@ app.use((req, res, next) => {
         decodeURIComponent(req.url);
         next();
     } catch {
-        next(new HttpError("Bad Request", "You've entered a malformed URL", 400));
+        next(
+            new HttpError("Bad Request", "You've entered a malformed URL", 400),
+        );
     }
 });
 
 app.use("/sign-up", signupRouter);
 app.use("/log-in", loginRouter);
 app.use("/log-out", logoutRouter);
+app.use("/home", homeRouter);
 
 app.use((req, res, next) =>
     next(
