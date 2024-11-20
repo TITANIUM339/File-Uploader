@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./partials/head.ejs", { title: "File Uploader", styles: ["home.css", "bootstrap-icons.css"] }) %>
+    <body>
+        <%- include("./partials/header.ejs") %>
+        <main>
+            <aside>
+                <button type="button" class="main-button sidebar-button" aria-label="New folder">
+                    <i class="bi bi-folder-plus"></i> <span>New folder</span>
+                </button>
+                <button type="button" class="main-button sidebar-button" aria-label="New file">
+                    <i class="bi bi-file-earmark-plus"></i> <span>New file</span>
+                </button>
+                <button type="button" class="main-button sidebar-button" aria-label="Share">
+                    <i class="bi bi-share"></i> <span>Share</span>
+                </button>
+                <button type="button" class="main-button sidebar-button" aria-label="Delete">
+                    <i class="bi bi-trash"></i> <span>Delete</span>
+                </button>
+            </aside>
+            <div class="files-container">
+                <ol class="breadcrumb">
+                    <li><a href="/home" class="link">Home</a></li>
+                    <li><a href="#" class="link">Folder</a></li>
+                    <li><a href="#" class="link">Subfolder</a></li>
+                </ol>
+                <div class="files">
+                    <div class="info">
+                        <div>Name</div>
+                        <div>Size</div>
+                        <div>Date created</div>
+                    </div>
+                    <a href="#" class="file secondary-button">
+                        <div class="name"><i class="bi bi-folder" aria-hidden="true"></i><span>Folder</span></div>
+                        <div class="size">--</div>
+                        <div class="date">11/15/2024 3:25 PM</div>
+                    </a>
+                    <a href="#" class="file secondary-button">
+                        <div class="name"><i class="bi bi-file-earmark-image" aria-hidden="true"></i><span>image.jpg</span></div>
+                        <div class="size">1.4 MB</div>
+                        <div class="date">11/15/2024 3:25 PM</div>
+                    </a>
+                </div>
+            </div>
+        </main>
+        <%- include("./partials/footer.ejs") %>
+    </body>
+</html>
