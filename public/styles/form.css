@@ -4,46 +4,6 @@ main {
     align-items: center;
 }
 
-.form-container {
-    padding: 30px;
-    border: var(--border);
-    border-radius: 5px;
-    box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.3);
-    max-width: 500px;
-    width: 100%;
-}
-
-.form-container form {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-form > div {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-label {
-    color: #d4d4d4;
-    font-weight: 500;
-}
-
-input {
-    color: inherit;
-    background-color: #0a0a0a;
-    border: var(--border);
-    border-radius: 5px;
-    padding: 5px;
-    width: 100%;
-}
-
-.error {
-    color: #b91c1c;
-}
-
 p {
     text-align: center;
 }
