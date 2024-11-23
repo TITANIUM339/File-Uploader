@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <%- include("./partials/head.ejs", { title: "Sign up - File Uploader", styles: ["form.css"] }) %>
+    <%- include("./partials/head.ejs", { title: "Sign up - File Uploader", styles: ["login-signup.css"] }) %>
     <body>
         <%- include("./partials/header.ejs") %>
         <main>
@@ -9,7 +9,7 @@
                 <form action="/sign-up" method="post">
                     <div>
                         <label for="username">Username *</label>
-                        <input type="text" name="username" id="username" value="<%= locals.username %>" autocomplete="username" required>
+                        <input type="text" name="username" id="username" value="<%= locals.username %>" autocomplete="username" autofocus required>
                         <% if (locals.usernameError) { %>
                             <div class="error"><%= locals.usernameError %></div>
                         <% } %>
