@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include("./partials/head.ejs", { title: "File Uploader", styles: ["home.css", "bootstrap-icons.css"] }) %>
+<%- include("./partials/head.ejs", { title: "File Uploader", styles: ["home.css"] }) %>
     <body>
         <%- include("./partials/header.ejs") %>
         <main>
@@ -17,6 +17,24 @@
                 <button type="button" class="main-button sidebar-button" aria-label="Delete">
                     <i class="bi bi-trash"></i> <span>Delete</span>
                 </button>
+                <dialog <%- locals.error ? "open" : null %>>
+                    <section class="form-container">
+                        <h1>Create new folder</h1>
+                        <form action="" method="post">
+                            <div>
+                                <label for="name">Name *</label>
+                                <input type="text" id="name" autocomplete="off" autofocus required>
+                                <% if (locals.nameError) { %>
+                                    <div class="error"><%= locals.nameError %>Error!</div>
+                                <% } %>
+                            </div>
+                            <div class="button-container">
+                                <button type="button" class="secondary-button">Cancel</button>
+                                <button type="submit" class="main-button">Save</button>
+                            </div>
+                        </form>
+                    </section>
+                </dialog>
             </aside>
             <div class="files-container">
                 <ol class="breadcrumb">
@@ -44,5 +62,6 @@
             </div>
         </main>
         <%- include("./partials/footer.ejs") %>
+        <script src="/scripts/sidebar.js"></script>
     </body>
 </html>

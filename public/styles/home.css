@@ -14,6 +14,55 @@ aside {
     font-size: 20px;
 }
 
+dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 15px;
+    max-width: 500px;
+    width: 100%;
+    transition: all 300ms allow-discrete;
+    opacity: 0;
+}
+
+dialog[open] {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+@starting-style {
+    dialog[open] {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0);
+    }
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0);
+    transition: all 300ms allow-discrete;
+}
+
+dialog[open]::backdrop {
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
+@starting-style {
+    dialog[open]::backdrop {
+        background-color: rgba(0, 0, 0, 0);
+    }
+}
+
+.form-container .button-container {
+    align-self: flex-end;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
 .files-container {
     display: grid;
     grid-template-rows: min-content 1fr;
@@ -30,7 +79,7 @@ aside {
 }
 
 .breadcrumb li + li:before {
-    padding: 6px;
+    padding: 0px 6px 0px 6px;
     content: ">";
 }
 
@@ -57,6 +106,7 @@ aside {
     margin-bottom: 10px;
 }
 
+.breadcrumb,
 .file > div,
 .info > div {
     overflow: auto;
