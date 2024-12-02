@@ -57,4 +57,23 @@ function validateLogin() {
     ];
 }
 
-export { validateSignup, validateLogin };
+function validateNewFolder() {
+    return [
+        body("name")
+            .trim()
+            .notEmpty()
+            .withMessage("Can't be empty")
+            .matches(/^[\w\-~.]+$/)
+            .withMessage("Contains a forbidden character"),
+        body("path")
+            .notEmpty()
+            .withMessage("Path can't be empty")
+            .matches(/^(?:\/[\w\-~.]+)*\/?$/)
+            .withMessage("Invalid path")
+            .customSanitizer((value) =>
+                value.split("/").filter((value) => value !== ""),
+            ),
+    ];
+}
+
+export { validateSignup, validateLogin, validateNewFolder };
