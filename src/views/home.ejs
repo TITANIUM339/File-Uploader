@@ -39,9 +39,11 @@
             </aside>
             <div class="files-container">
                 <ol class="breadcrumb">
-                    <li><a href="/home" class="link">Home</a></li>
-                    <li><a href="#" class="link">Folder</a></li>
-                    <li><a href="#" class="link">Subfolder</a></li>
+                    <% let current = [] %>
+                    <% for( let i = 0; i < path.length; i++ ) { %>
+                        <% current.push(path[i]) %>
+                        <li><a href="/<%= current.join("/") %>" class="link"><%= path[i] %></a></li>
+                    <% } %>
                 </ol>
                 <div class="files">
                     <div class="info">

@@ -4,7 +4,12 @@ const home = {
     get: [
         isAuthenticated,
         (req, res) => {
-            res.render("home", { path: req.path });
+            res.render("home", {
+                path: [
+                    "home",
+                    ...req.path.split("/").filter((value) => value !== ""),
+                ],
+            });
         },
     ],
 };
