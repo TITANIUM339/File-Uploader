@@ -9,7 +9,7 @@
                 <form action="/sign-up" method="post">
                     <div>
                         <label for="username">Username *</label>
-                        <input type="text" name="username" id="username" value="<%= locals.username %>" autocomplete="username" autofocus required>
+                        <input type="text" name="username" id="username" value="<%= locals.username %>" autocomplete="username" pattern="^\w+$" title="Allowed characters (A-Z, a-z, 0-9, _)" autofocus required>
                         <% if (locals.usernameError) { %>
                             <div class="error"><%= locals.usernameError %></div>
                         <% } %>
