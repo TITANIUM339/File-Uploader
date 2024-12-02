@@ -7,4 +7,14 @@ document.querySelectorAll(".sidebar-button").forEach((button, index) => {
     dialog
         .querySelector(".secondary-button")
         .addEventListener("click", () => dialog.close());
+
+    const form = dialog.querySelector("form");
+
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        dialog.close();
+
+        form.submit();
+    });
 });
