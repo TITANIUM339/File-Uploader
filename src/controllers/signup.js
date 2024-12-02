@@ -38,6 +38,7 @@ const signup = {
                 data: {
                     username,
                     passwordHash: await bcrypt.hash(password, 10),
+                    home: { create: {} },
                 },
             });
 
