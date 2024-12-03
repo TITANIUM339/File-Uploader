@@ -5,7 +5,8 @@ const home = {
         isAuthenticated,
         (req, res) => {
             res.render("home", {
-                path: [
+                path: req.path,
+                breadcrumb: [
                     "home",
                     ...req.path.split("/").filter((value) => value !== ""),
                 ],
