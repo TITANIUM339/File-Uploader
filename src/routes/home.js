@@ -3,11 +3,13 @@ import { home } from "../controllers/home.js";
 import asyncHandler from "express-async-handler";
 import prisma from "../lib/client.js";
 import { arrayToJsonpath, pathToArray } from "../lib/pathUtilities.js";
+import isAuthenticated from "../lib/isAuthenticated.js";
 
 const router = Router();
 
-router.use(
+router.get(
     /^(?:\/[\w\-~.]+)*\/?$/,
+    isAuthenticated,
     asyncHandler(async (req, res, next) => {
         const path = pathToArray(req.path);
 
@@ -24,8 +26,7 @@ router.use(
 
         next();
     }),
+    home.get,
 );
-
-router.get(/^(?:\/[\w\-~.]+)*\/?$/, home.get);
 
 export default router;
