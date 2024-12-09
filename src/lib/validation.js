@@ -1,5 +1,6 @@
 import { body } from "express-validator";
 import prisma from "./client.js";
+import { pathToArray } from "./pathUtilities.js";
 
 function getOneTimeNext(next) {
     let nextCalled = false;
@@ -70,9 +71,7 @@ function validateNewFolder() {
             .withMessage("Path can't be empty")
             .matches(/^(?:\/[\w\-~.]+)*\/?$/)
             .withMessage("Invalid path")
-            .customSanitizer((value) =>
-                value.split("/").filter((value) => value !== ""),
-            ),
+            .customSanitizer((value) => pathToArray(value)),
     ];
 }
 

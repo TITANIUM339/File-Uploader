@@ -1,15 +1,16 @@
 import asyncHandler from "express-async-handler";
 import isAuthenticated from "../lib/isAuthenticated.js";
 import prisma from "../lib/client.js";
+import { arrayToJsonpath, pathToArray } from "../lib/pathUtilities.js";
 
 const home = {
     get: [
         isAuthenticated,
         asyncHandler(async (req, res) => {
-            const path = req.path.split("/").filter((value) => value !== "");
+            const path = pathToArray(req.path);
 
             const [result] =
-                await prisma.$queryRaw`SELECT jsonb_path_query(folder, ${path.length ? `$."${path.join('"."')}"` : "$"}::jsonpath) AS items FROM "Home" WHERE id = ${req.user.homeId}`;
+                await prisma.$queryRaw`SELECT jsonb_path_query(folder, ${arrayToJsonpath(path)}::jsonpath) AS items FROM "Home" WHERE id = ${req.user.homeId}`;
 
             const { items } = result;
 
@@ -25,10 +26,7 @@ const home = {
 
             res.render("home", {
                 path: req.path,
-                breadcrumb: [
-                    "home",
-                    ...req.path.split("/").filter((value) => value !== ""),
-                ],
+                breadcrumb: ["home", ...path],
                 files,
             });
         }),
