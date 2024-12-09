@@ -40,7 +40,7 @@
             <div class="files-container">
                 <ol class="breadcrumb">
                     <% let current = [] %>
-                    <% for( let i = 0; i < breadcrumb.length; i++ ) { %>
+                    <% for (let i = 0; i < breadcrumb.length; i++) { %>
                         <% current.push(breadcrumb[i]) %>
                         <li><a href="/<%= current.join("/") %>" class="link"><%= breadcrumb[i] %></a></li>
                     <% } %>
@@ -51,20 +51,21 @@
                         <div>Size</div>
                         <div>Date created</div>
                     </div>
-                    <a href="#" class="file secondary-button">
-                        <div class="name"><i class="bi bi-folder" aria-hidden="true"></i><span>Folder</span></div>
-                        <div class="size">--</div>
-                        <div class="date">11/15/2024 3:25 PM</div>
-                    </a>
-                    <a href="#" class="file secondary-button">
-                        <div class="name"><i class="bi bi-file-earmark-image" aria-hidden="true"></i><span>image.jpg</span></div>
-                        <div class="size">1.4 MB</div>
-                        <div class="date">11/15/2024 3:25 PM</div>
-                    </a>
+                    <% for (let i = 0; i < files.length; i++) { %>
+                        <a href="<%= files[i].path %>" class="file secondary-button">
+                            <div class="name">
+                                <i class="<%= files[i].iconClassname %>" aria-hidden="true"></i>
+                                <span><%= files[i].name %></span>
+                            </div>
+                            <div class="size"><%= files[i].size ? files[i].size : "--"%></div>
+                            <div class="date" data-date="<%= files[i].date %>"></div>
+                        </a>
+                    <% } %>
                 </div>
             </div>
         </main>
         <%- include("./partials/footer.ejs") %>
         <script src="/scripts/sidebar.js"></script>
+        <script src="/scripts/timeZone.js"></script>
     </body>
 </html>
