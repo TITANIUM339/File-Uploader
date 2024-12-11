@@ -36,6 +36,29 @@
                         </form>
                     </section>
                 </dialog>
+                <dialog <%- locals.newFileError ? "open" : null %>>
+                    <section class="form-container">
+                        <h1>Upload new file</h1>
+                        <form action="/file/new-file" method="post" enctype="multipart/form-data">
+                            <div>
+                                <label for="file-name">Name *</label>
+                                <input type="text" id="file-name" name="name" autocomplete="off" pattern="^[\w\-~.]+$" title="Allowed characters (A-Z, a-z, 0-9, -, _, ~, .)" autofocus required>
+                            </div>
+                            <div>
+                                <label for="file">File *</label>
+                                <input type="file" id="file" name="file" required>
+                                <input type="hidden" name="path" value="<%= path %>">
+                                <% if (locals.fileError) { %>
+                                    <div class="error"><%= locals.fileError %></div>
+                                <% } %>
+                            </div>
+                            <div class="button-container">
+                                <button type="button" class="secondary-button">Cancel</button>
+                                <button type="submit" class="main-button">Upload</button>
+                            </div>
+                        </form>
+                    </section>
+                </dialog>
             </aside>
             <div class="files-container">
                 <ol class="breadcrumb">
