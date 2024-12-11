@@ -18,7 +18,8 @@ const home = {
                 path: `/home${req.path === "/" ? "" : req.path}/${value}`,
                 size: items[value].$size,
                 date: items[value].$date,
-                iconClassname: items[value].$size ? "" : "bi bi-folder",
+                iconClassname:
+                    items[value].$type === "folder" ? "bi bi-folder" : "",
             }));
 
         res.render("home", {

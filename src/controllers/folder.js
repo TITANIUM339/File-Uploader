@@ -4,6 +4,7 @@ import { matchedData, validationResult } from "express-validator";
 import prisma from "../lib/client.js";
 import isAuthenticated from "../lib/isAuthenticated.js";
 import { UTCDate } from "@date-fns/utc";
+import { arrayToJsonpath } from "../lib/pathUtilities.js";
 
 const newFolder = {
     post: [
@@ -29,7 +30,12 @@ const newFolder = {
 
             const folderPath = [...path, name];
 
-            await prisma.$executeRaw`UPDATE "Home" SET folder = jsonb_insert(folder, ${folderPath}::text[], ${`{"$date": "${new UTCDate()}"}`}::jsonb) WHERE id = ${req.user.homeId} AND NOT jsonb_path_exists(folder, ${`$."${folderPath.join('"."')}"`}::jsonpath);`;
+            const newFolder = {
+                $type: "folder",
+                $date: new UTCDate(),
+            };
+
+            await prisma.$executeRaw`UPDATE "Home" SET folder = jsonb_insert(folder, ${folderPath}::text[], ${newFolder}::jsonb) WHERE id = ${req.user.homeId} AND NOT jsonb_path_exists(folder, ${arrayToJsonpath(folderPath)}::jsonpath);`;
 
             res.redirect(`/home/${path.join("/")}`);
         }),
