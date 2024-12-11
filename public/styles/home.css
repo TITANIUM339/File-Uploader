@@ -83,6 +83,10 @@ dialog[open]::backdrop {
     content: ">";
 }
 
+.files p {
+    text-align: center;
+}
+
 .info,
 .file {
     display: grid;
