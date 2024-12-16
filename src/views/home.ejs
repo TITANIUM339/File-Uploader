@@ -22,8 +22,8 @@
                         <h1>Create new folder</h1>
                         <form action="/folder/new-folder" method="post">
                             <div>
-                                <label for="name">Name *</label>
-                                <input type="text" id="name" name="name" autocomplete="off" pattern="^[\w\-~.]+$" title="Allowed characters (A-Z, a-z, 0-9, -, _, ~, .)" autofocus required>
+                                <label for="folder-name">Name *</label>
+                                <input type="text" id="folder-name" name="name" autocomplete="off" pattern="^[\w\-~.]+$" title="Allowed characters (A-Z, a-z, 0-9, -, _, ~, .)" autofocus required>
                                 <input type="hidden" name="path" value="<%= path %>">
                             </div>
                             <div class="button-container">
