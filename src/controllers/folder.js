@@ -5,23 +5,15 @@ import prisma from "../lib/client.js";
 import isAuthenticated from "../lib/isAuthenticated.js";
 import { UTCDate } from "@date-fns/utc";
 import { arrayToJsonpath } from "../lib/pathUtilities.js";
+import HttpError from "../lib/HttpError.js";
 
 const newFolder = {
     post: [
         isAuthenticated,
         validateNewFolder(),
-        asyncHandler(async (req, res) => {
-            const error = validationResult(req);
-
-            if (!error.isEmpty()) {
-                const errors = error.array({ onlyFirstError: true });
-
-                res.render("home", {
-                    newFolderError: true,
-                    nameError: errors[0].msg,
-                    name: req.body.name,
-                    path: req.body.path,
-                });
+        asyncHandler(async (req, res, next) => {
+            if (!validationResult(req).isEmpty()) {
+                next(new HttpError("Bad Request", "Invalid input", 400));
 
                 return;
             }

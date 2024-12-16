@@ -17,17 +17,14 @@
                 <button type="button" class="main-button sidebar-button" aria-label="Delete">
                     <i class="bi bi-trash"></i> <span>Delete</span>
                 </button>
-                <dialog <%- locals.newFolderError ? "open" : null %>>
+                <dialog>
                     <section class="form-container">
                         <h1>Create new folder</h1>
                         <form action="/folder/new-folder" method="post">
                             <div>
                                 <label for="name">Name *</label>
-                                <input type="text" id="name" name="name" autocomplete="off" pattern="^[\w\-~.]+$" title="Allowed characters (A-Z, a-z, 0-9, -, _, ~, .)" value="<%= locals.name %>" autofocus required>
+                                <input type="text" id="name" name="name" autocomplete="off" pattern="^[\w\-~.]+$" title="Allowed characters (A-Z, a-z, 0-9, -, _, ~, .)" autofocus required>
                                 <input type="hidden" name="path" value="<%= path %>">
-                                <% if (locals.nameError) { %>
-                                    <div class="error"><%= locals.nameError %></div>
-                                <% } %>
                             </div>
                             <div class="button-container">
                                 <button type="button" class="secondary-button">Cancel</button>
@@ -36,7 +33,7 @@
                         </form>
                     </section>
                 </dialog>
-                <dialog <%- locals.newFileError ? "open" : null %>>
+                <dialog>
                     <section class="form-container">
                         <h1>Upload new file</h1>
                         <form action="/file/new-file" method="post" enctype="multipart/form-data">
@@ -48,9 +45,6 @@
                                 <label for="file">File *</label>
                                 <input type="file" id="file" name="file" required>
                                 <input type="hidden" name="path" value="<%= path %>">
-                                <% if (locals.fileError) { %>
-                                    <div class="error"><%= locals.fileError %></div>
-                                <% } %>
                             </div>
                             <div class="button-container">
                                 <button type="button" class="secondary-button">Cancel</button>
