@@ -72,6 +72,7 @@ function validateNewFolder() {
             .withMessage("Path can't be empty")
             .matches(PATH_PATTERN)
             .withMessage("Invalid path")
+            .bail()
             .customSanitizer((value) => pathToArray(value)),
     ];
 }
