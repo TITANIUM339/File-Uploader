@@ -4,11 +4,12 @@ import asyncHandler from "express-async-handler";
 import prisma from "../lib/client.js";
 import { arrayToJsonpath, pathToArray } from "../lib/pathUtilities.js";
 import isAuthenticated from "../lib/isAuthenticated.js";
+import { PATH_PATTERN } from "../lib/constants.js";
 
 const router = Router();
 
 router.get(
-    /^(?:\/[\w\-~.]+)*\/?$/,
+    PATH_PATTERN,
     isAuthenticated,
     asyncHandler(async (req, res, next) => {
         const path = pathToArray(req.path);

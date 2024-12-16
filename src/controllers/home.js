@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import prisma from "../lib/client.js";
 import { arrayToJsonpath, pathToArray } from "../lib/pathUtilities.js";
+import { NAME_PATTERN } from "../lib/constants.js";
 
 const home = {
     get: asyncHandler(async (req, res) => {
@@ -26,6 +27,7 @@ const home = {
             path: req.path,
             breadcrumb: ["home", ...path],
             files,
+            namePattern: NAME_PATTERN.source,
         });
     }),
 };

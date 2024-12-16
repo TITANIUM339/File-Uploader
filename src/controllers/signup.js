@@ -3,10 +3,11 @@ import { validateSignup } from "../lib/validation.js";
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
 import prisma from "../lib/client.js";
+import { USERNAME_PATTERN } from "../lib/constants.js";
 
 const signup = {
     get(req, res) {
-        res.render("signup");
+        res.render("signup", { usernamePattern: USERNAME_PATTERN.source });
     },
     post: [
         validateSignup(),
@@ -27,6 +28,7 @@ const signup = {
                     confirmPasswordError: errors.find(
                         (value) => value.path === "confirmPassword",
                     )?.msg,
+                    usernamePattern: USERNAME_PATTERN.source,
                 });
 
                 return;

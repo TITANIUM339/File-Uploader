@@ -1,6 +1,7 @@
 import { body } from "express-validator";
 import prisma from "./client.js";
 import { pathToArray } from "./pathUtilities.js";
+import { USERNAME_PATTERN, NAME_PATTERN, PATH_PATTERN } from "./constants.js";
 
 function getOneTimeNext(next) {
     let nextCalled = false;
@@ -22,7 +23,7 @@ function validateSignup() {
                 .trim()
                 .notEmpty()
                 .withMessage("Can't be empty")
-                .matches(/^\w+$/)
+                .matches(USERNAME_PATTERN)
                 .withMessage("Contains a forbidden character")
                 .bail()
                 .custom(async (value) => {
@@ -64,12 +65,12 @@ function validateNewFolder() {
             .trim()
             .notEmpty()
             .withMessage("Can't be empty")
-            .matches(/^[\w\-~.]+$/)
+            .matches(NAME_PATTERN)
             .withMessage("Contains a forbidden character"),
         body("path")
             .notEmpty()
             .withMessage("Path can't be empty")
-            .matches(/^(?:\/[\w\-~.]+)*\/?$/)
+            .matches(PATH_PATTERN)
             .withMessage("Invalid path")
             .customSanitizer((value) => pathToArray(value)),
     ];
