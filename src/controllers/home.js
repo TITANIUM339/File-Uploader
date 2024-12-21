@@ -14,22 +14,34 @@ const home = {
         const { items } = result;
 
         const files = Object.keys(items)
-            .filter((value) => !value.includes("$"))
+            .filter(
+                (value) =>
+                    !value.includes("$") && items[value].$type === "file",
+            )
             .map((value) => ({
                 name: value,
                 path: `/home${req.path === "/" ? "" : req.path}/${value}`,
                 size: items[value].$size,
                 date: items[value].$date,
-                iconClassname:
-                    items[value].$type === "folder"
-                        ? "bi bi-folder"
-                        : getIconClassname(items[value].$extension),
+                iconClassname: getIconClassname(items[value].$extension),
+            }));
+
+        const folders = Object.keys(items)
+            .filter(
+                (value) =>
+                    !value.includes("$") && items[value].$type === "folder",
+            )
+            .map((value) => ({
+                name: value,
+                path: `/home${req.path === "/" ? "" : req.path}/${value}`,
+                date: items[value].$date,
+                iconClassname: "bi bi-folder",
             }));
 
         res.render("home", {
             path: req.path,
             breadcrumb: ["home", ...path],
-            files,
+            files: [...folders, ...files],
             namePattern: NAME_PATTERN.source,
         });
     }),
