@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import prisma from "../lib/client.js";
 import { arrayToJsonpath, pathToArray } from "../lib/pathUtilities.js";
 import { NAME_PATTERN } from "../lib/constants.js";
+import getIconClassname from "../lib/getIconClassname.js";
 
 const home = {
     get: asyncHandler(async (req, res) => {
@@ -20,7 +21,9 @@ const home = {
                 size: items[value].$size,
                 date: items[value].$date,
                 iconClassname:
-                    items[value].$type === "folder" ? "bi bi-folder" : "",
+                    items[value].$type === "folder"
+                        ? "bi bi-folder"
+                        : getIconClassname(items[value].$extension),
             }));
 
         res.render("home", {
