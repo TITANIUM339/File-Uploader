@@ -43,12 +43,12 @@ const newFile = {
 
             const [[result], rows] = await Promise.all([
                 prisma.$queryRaw`SELECT jsonb_path_exists(folder, ${arrayToJsonpath(path)}::jsonpath) AS exists FROM "Home" WHERE id = ${req.user.homeId};`,
-                prisma.$executeRaw`UPDATE "Home" SET folder = jsonb_insert(folder, ${filePath}::text[], ${newFile}::jsonb) WHERE id = ${req.user.homeId} AND NOT jsonb_path_exists(folder, ${arrayToJsonpath(filePath)}::jsonpath);`,
+                prisma.$executeRaw`UPDATE "Home" SET folder = jsonb_insert(folder, ${filePath}::text[], ${newFile}::jsonb) WHERE id = ${req.user.homeId} AND NOT jsonb_path_exists(folder, ${arrayToJsonpath(filePath)}::jsonpath) AND COALESCE(folder #>> ${[...path, "$type"]}::text[], 'folder') = 'folder';`,
             ]);
 
             const { exists } = result;
 
-            // Remove file if provided path doesn't exist or provided file name already exists
+            // Remove file if provided path doesn't exist or UPDATE query didn't change anything
             (!exists || !rows) && (await unlink(req.file.path));
 
             res.redirect(`/home/${path.join("/")}`);

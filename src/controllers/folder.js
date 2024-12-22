@@ -27,7 +27,8 @@ const newFolder = {
                 $date: new UTCDate(),
             };
 
-            await prisma.$executeRaw`UPDATE "Home" SET folder = jsonb_insert(folder, ${folderPath}::text[], ${newFolder}::jsonb) WHERE id = ${req.user.homeId} AND NOT jsonb_path_exists(folder, ${arrayToJsonpath(folderPath)}::jsonpath);`;
+            // Insert the new folder only when there is no existing folder with the same name and the provided path leads to an actual folder and not a file
+            await prisma.$executeRaw`UPDATE "Home" SET folder = jsonb_insert(folder, ${folderPath}::text[], ${newFolder}::jsonb) WHERE id = ${req.user.homeId} AND NOT jsonb_path_exists(folder, ${arrayToJsonpath(folderPath)}::jsonpath) AND COALESCE(folder #>> ${[...path, "$type"]}::text[], 'folder') = 'folder';`;
 
             res.redirect(`/home/${path.join("/")}`);
         }),
