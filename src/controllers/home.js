@@ -13,30 +13,34 @@ const home = {
 
         const { items } = result;
 
-        const files = Object.keys(items)
-            .filter(
-                (value) =>
-                    !value.includes("$") && items[value].$type === "file",
-            )
-            .map((value) => ({
-                name: value,
-                path: `/home${req.path === "/" ? "" : req.path}/${value}`,
-                size: items[value].$size,
-                date: items[value].$date,
-                iconClassname: getIconClassname(items[value].$extension),
-            }));
+        const files = [];
+        const folders = [];
 
-        const folders = Object.keys(items)
-            .filter(
-                (value) =>
-                    !value.includes("$") && items[value].$type === "folder",
-            )
-            .map((value) => ({
-                name: value,
-                path: `/home${req.path === "/" ? "" : req.path}/${value}`,
-                date: items[value].$date,
-                iconClassname: "bi bi-folder",
-            }));
+        Object.keys(items)
+            .filter((value) => !value.includes("$"))
+            .forEach((value) => {
+                const path = `/home${req.path === "/" ? "" : req.path}/${value}`;
+                const date = items[value].$date;
+
+                if (items[value].$type === "file") {
+                    files.push({
+                        path,
+                        date,
+                        name: value,
+                        size: items[value].$size,
+                        iconClassname: getIconClassname(
+                            items[value].$extension,
+                        ),
+                    });
+                } else {
+                    folders.push({
+                        path,
+                        date,
+                        name: value,
+                        iconClassname: "bi bi-folder",
+                    });
+                }
+            });
 
         res.render("home", {
             path: req.path,
