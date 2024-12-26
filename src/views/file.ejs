@@ -19,13 +19,7 @@
                 </button>
             </aside>
             <div class="files-container">
-                <ol class="breadcrumb">
-                    <% let current = [] %>
-                    <% for (let i = 0; i < breadcrumb.length; i++) { %>
-                        <% current.push(breadcrumb[i]) %>
-                        <li><a href="/<%= current.join("/") %>" class="link"><%= breadcrumb[i] %></a></li>
-                    <% } %>
-                </ol>
+                <%- include("./partials/breadcrumb.ejs") %>
                 <div class="file-container">
                     <div class="icon-container">
                         <i class="<%= file.iconClassname %>" aria-hidden="true"></i>
