@@ -69,20 +69,6 @@ dialog[open]::backdrop {
     gap: 15px;
 }
 
-.breadcrumb {
-    list-style: none;
-    padding: 0;
-}
-
-.breadcrumb > li {
-    display: inline;
-}
-
-.breadcrumb li + li:before {
-    padding: 0px 6px 0px 6px;
-    content: ">";
-}
-
 .files p {
     text-align: center;
 }
@@ -110,7 +96,6 @@ dialog[open]::backdrop {
     margin-bottom: 10px;
 }
 
-.breadcrumb,
 .file > div,
 .info > div {
     overflow: auto;

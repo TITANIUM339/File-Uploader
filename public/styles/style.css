@@ -195,3 +195,18 @@ input::file-selector-button,
 .form-container .error {
     color: #b91c1c;
 }
+
+.breadcrumb {
+    list-style: none;
+    padding: 0;
+    overflow: auto;
+}
+
+.breadcrumb > li {
+    display: inline;
+}
+
+.breadcrumb li + li:before {
+    padding: 0px 6px 0px 6px;
+    content: ">";
+}
