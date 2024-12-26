@@ -51,4 +51,26 @@ const home = {
     }),
 };
 
-export { home };
+const file = {
+    get: asyncHandler(async (req, res) => {
+        const path = pathToArray(req.path);
+
+        const [result] =
+            await prisma.$queryRaw`SELECT jsonb_path_query(folder, ${arrayToJsonpath(path)}::jsonpath) AS file FROM "Home" WHERE id = ${req.user.homeId}`;
+
+        const { file } = result;
+
+        res.render("file", {
+            breadcrumb: ["home", ...path],
+            file: {
+                name: path[path.length - 1],
+                iconClassname: getIconClassname(file.$extension),
+                date: file.$date,
+                size: file.$size,
+                type: file.$mimeType,
+            },
+        });
+    }),
+};
+
+export { home, file };
