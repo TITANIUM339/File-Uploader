@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { home } from "../controllers/home.js";
+import { file, home } from "../controllers/home.js";
 import asyncHandler from "express-async-handler";
 import prisma from "../lib/client.js";
 import { arrayToJsonpath, pathToArray } from "../lib/pathUtilities.js";
@@ -8,9 +8,10 @@ import { PATH_PATTERN } from "../lib/constants.js";
 
 const router = Router();
 
+router.use(isAuthenticated);
+
 router.get(
     PATH_PATTERN,
-    isAuthenticated,
     asyncHandler(async (req, res, next) => {
         const path = pathToArray(req.path);
 
@@ -27,7 +28,24 @@ router.get(
 
         next();
     }),
+    asyncHandler(async (req, res, next) => {
+        const path = pathToArray(req.path);
+
+        const [result] =
+            await prisma.$queryRaw`SELECT COALESCE(folder #>> ${[...path, "$type"]}::text[], 'folder') = 'folder' AS "isFolder" FROM "Home" WHERE id = ${req.user.homeId};`;
+
+        const { isFolder } = result;
+
+        if (!isFolder) {
+            next("route");
+
+            return;
+        }
+
+        next();
+    }),
     home.get,
 );
+router.get(PATH_PATTERN, file.get);
 
 export default router;
