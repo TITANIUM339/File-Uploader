@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./partials/head.ejs", { title: "File Uploader", styles: ["home.css"] }) %>
+    <body>
+        <%- include("./partials/header.ejs") %>
+        <main>
+            <aside>
+                <button type="button" class="main-button sidebar-button" aria-label="New folder">
+                    <i class="bi bi-file-earmark-arrow-down"></i> <span>Download</span>
+                </button>
+                <button type="button" class="main-button sidebar-button" aria-label="New file">
+                    <i class="bi bi-input-cursor-text"></i> <span>Rename</span>
+                </button>
+                <button type="button" class="main-button sidebar-button" aria-label="Share">
+                    <i class="bi bi-share"></i> <span>Share</span>
+                </button>
+                <button type="button" class="main-button sidebar-button" aria-label="Delete">
+                    <i class="bi bi-trash"></i> <span>Delete</span>
+                </button>
+            </aside>
+            <div class="files-container">
+                <ol class="breadcrumb">
+                    <% let current = [] %>
+                    <% for (let i = 0; i < breadcrumb.length; i++) { %>
+                        <% current.push(breadcrumb[i]) %>
+                        <li><a href="/<%= current.join("/") %>" class="link"><%= breadcrumb[i] %></a></li>
+                    <% } %>
+                </ol>
+                <div class="file-container">
+                    <div class="icon-container">
+                        <i class="<%= file.iconClassname %>" aria-hidden="true"></i>
+                    </div>
+                    <section>
+                        <h1><%= file.name %></h1>
+                        <section class="details">
+                            <h2>Details</h2>
+                            <ul>
+                                <li class="date" data-date="<%= file.date %>">Date uploaded:&nbsp;</li>
+                                <li>Size: <%= Math.round(file.size / 1000).toLocaleString() %> KB</li>
+                                <li>Type: <%= file.type %></li>
+                            </ul>
+                        </section>
+                    </section>
+                </div>
+            </div>
+        </main>
+        <%- include("./partials/footer.ejs") %>
+        <script src="/scripts/sidebar.js"></script>
+        <script src="/scripts/timeZone.js"></script>
+    </body>
+</html>

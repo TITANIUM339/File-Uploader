@@ -131,6 +131,29 @@ dialog[open]::backdrop {
     font-size: 18px;
 }
 
+.file-container {
+    height: min-content;
+    display: flex;
+    gap: 10px;
+    word-break: break-all;
+}
+
+.icon-container {
+    font-size: 100px;
+    border: var(--border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    min-width: 200px;
+    height: 200px;
+}
+
+.details > h2 {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
 @media (max-width: 600px) {
     main {
         grid-template-columns: 1fr;
@@ -144,6 +167,10 @@ dialog[open]::backdrop {
     aside {
         flex-direction: row;
         justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .file-container {
         flex-wrap: wrap;
     }
 }
