@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { file, home } from "../controllers/home.js";
+import { file, folder } from "../controllers/home.js";
 import asyncHandler from "express-async-handler";
 import prisma from "../lib/client.js";
 import { arrayToJsonpath, pathToArray } from "../lib/pathUtilities.js";
@@ -44,7 +44,7 @@ router.get(
 
         next();
     }),
-    home.get,
+    folder.get,
 );
 router.get(PATH_PATTERN, file.get);
 

@@ -4,7 +4,7 @@ import { arrayToJsonpath, pathToArray } from "../lib/pathUtilities.js";
 import { NAME_PATTERN } from "../lib/constants.js";
 import getIconClassname from "../lib/getIconClassname.js";
 
-const home = {
+const folder = {
     get: asyncHandler(async (req, res) => {
         const path = pathToArray(req.path);
 
@@ -42,7 +42,7 @@ const home = {
                 }
             });
 
-        res.render("home", {
+        res.render("folder", {
             path: req.path,
             breadcrumb: ["home", ...path],
             files: [...folders, ...files],
@@ -73,4 +73,4 @@ const file = {
     }),
 };
 
-export { home, file };
+export { folder, file };
