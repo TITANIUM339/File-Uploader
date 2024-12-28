@@ -77,4 +77,14 @@ function validateNewFile() {
     ];
 }
 
-export { validateSignup, validateLogin, validateNewFile };
+function validateDownload() {
+    return body("path")
+        .notEmpty()
+        .withMessage("Path can't be empty")
+        .matches(PATH_PATTERN)
+        .withMessage("Invalid path")
+        .bail()
+        .customSanitizer((value) => pathToArray(value));
+}
+
+export { validateSignup, validateLogin, validateNewFile, validateDownload };
