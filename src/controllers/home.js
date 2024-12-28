@@ -3,13 +3,15 @@ import prisma from "../lib/client.js";
 import { arrayToJsonpath, pathToArray } from "../lib/pathUtilities.js";
 import { NAME_PATTERN } from "../lib/constants.js";
 import getIconClassname from "../lib/getIconClassname.js";
+import { getFiles } from "../lib/queries.js";
 
 const folder = {
     get: asyncHandler(async (req, res) => {
         const path = pathToArray(req.path);
 
-        const [result] =
-            await prisma.$queryRaw`SELECT jsonb_path_query(folder, ${arrayToJsonpath(path)}::jsonpath) AS items FROM "Home" WHERE id = ${req.user.homeId}`;
+        const [result] = await prisma.$queryRaw(
+            getFiles(arrayToJsonpath(path), req.user.homeId),
+        );
 
         const { items } = result;
 
@@ -55,10 +57,11 @@ const file = {
     get: asyncHandler(async (req, res) => {
         const path = pathToArray(req.path);
 
-        const [result] =
-            await prisma.$queryRaw`SELECT jsonb_path_query(folder, ${arrayToJsonpath(path)}::jsonpath) AS file FROM "Home" WHERE id = ${req.user.homeId}`;
+        const [result] = await prisma.$queryRaw(
+            getFiles(arrayToJsonpath(path), req.user.homeId),
+        );
 
-        const { file } = result;
+        const { items: file } = result;
 
         res.render("file", {
             breadcrumb: ["home", ...path],

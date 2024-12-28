@@ -5,6 +5,7 @@ import prisma from "../lib/client.js";
 import { arrayToJsonpath, pathToArray } from "../lib/pathUtilities.js";
 import isAuthenticated from "../lib/isAuthenticated.js";
 import { PATH_PATTERN } from "../lib/constants.js";
+import { isFolder, pathExists } from "../lib/queries.js";
 
 const router = Router();
 
@@ -15,8 +16,9 @@ router.get(
     asyncHandler(async (req, res, next) => {
         const path = pathToArray(req.path);
 
-        const [result] =
-            await prisma.$queryRaw`SELECT jsonb_path_exists(folder, ${arrayToJsonpath(path)}::jsonpath) AS exists FROM "Home" WHERE id = ${req.user.homeId};`;
+        const [result] = await prisma.$queryRaw(
+            pathExists(arrayToJsonpath(path), req.user.homeId),
+        );
 
         const { exists } = result;
 
@@ -31,12 +33,11 @@ router.get(
     asyncHandler(async (req, res, next) => {
         const path = pathToArray(req.path);
 
-        const [result] =
-            await prisma.$queryRaw`SELECT COALESCE(folder #>> ${[...path, "$type"]}::text[], 'folder') = 'folder' AS "isFolder" FROM "Home" WHERE id = ${req.user.homeId};`;
+        const [result] = await prisma.$queryRaw(isFolder(path, req.user.homeId));
 
-        const { isFolder } = result;
+        const { folder } = result;
 
-        if (!isFolder) {
+        if (!folder) {
             next("route");
 
             return;

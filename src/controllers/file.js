@@ -5,9 +5,9 @@ import asyncHandler from "express-async-handler";
 import { matchedData, validationResult } from "express-validator";
 import HttpError from "../lib/HttpError.js";
 import prisma from "../lib/client.js";
-import { UTCDate } from "@date-fns/utc";
 import { arrayToJsonpath } from "../lib/pathUtilities.js";
 import { unlink } from "fs/promises";
+import { pathExists, addNewFile } from "../lib/queries.js";
 
 const upload = multer({ dest: "uploads" });
 
@@ -29,21 +29,13 @@ const newFile = {
 
             const filePath = [...path, name];
 
-            const newFile = {
-                $type: "file",
-                $mimeType: req.file.mimetype,
-                $size: req.file.size,
-                $location: req.file.path,
-                $extension:
-                    /^.+\.([A-Za-z0-9]+)$/
-                        .exec(req.file.originalname)?.[1]
-                        .toLowerCase() || null,
-                $date: new UTCDate(),
-            };
-
             const [[result], rows] = await Promise.all([
-                prisma.$queryRaw`SELECT jsonb_path_exists(folder, ${arrayToJsonpath(path)}::jsonpath) AS exists FROM "Home" WHERE id = ${req.user.homeId};`,
-                prisma.$executeRaw`UPDATE "Home" SET folder = jsonb_insert(folder, ${filePath}::text[], ${newFile}::jsonb) WHERE id = ${req.user.homeId} AND NOT jsonb_path_exists(folder, ${arrayToJsonpath(filePath)}::jsonpath) AND COALESCE(folder #>> ${[...path, "$type"]}::text[], 'folder') = 'folder';`,
+                prisma.$queryRaw(
+                    pathExists(arrayToJsonpath(path), req.user.homeId),
+                ),
+                prisma.$executeRaw(
+                    addNewFile(filePath, req.file, req.user.homeId),
+                ),
             ]);
 
             const { exists } = result;
