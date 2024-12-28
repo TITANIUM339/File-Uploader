@@ -59,7 +59,7 @@ function validateLogin() {
     ];
 }
 
-function validateNewFolder() {
+function validateNewFile() {
     return [
         body("name")
             .trim()
@@ -77,4 +77,4 @@ function validateNewFolder() {
     ];
 }
 
-export { validateSignup, validateLogin, validateNewFolder };
+export { validateSignup, validateLogin, validateNewFile };

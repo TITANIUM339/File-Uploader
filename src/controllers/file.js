@@ -1,5 +1,5 @@
 import multer from "multer";
-import { validateNewFolder } from "../lib/validation.js";
+import { validateNewFile } from "../lib/validation.js";
 import isAuthenticated from "../lib/isAuthenticated.js";
 import asyncHandler from "express-async-handler";
 import { matchedData, validationResult } from "express-validator";
@@ -15,7 +15,7 @@ const newFile = {
     post: [
         isAuthenticated,
         upload.single("file"),
-        validateNewFolder(),
+        validateNewFile(),
         asyncHandler(async (req, res, next) => {
             if (!validationResult(req).isEmpty() || !req.file) {
                 req.file && (await unlink(req.file.path));

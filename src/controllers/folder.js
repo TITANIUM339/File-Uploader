@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import { validateNewFolder } from "../lib/validation.js";
+import { validateNewFile } from "../lib/validation.js";
 import { matchedData, validationResult } from "express-validator";
 import prisma from "../lib/client.js";
 import isAuthenticated from "../lib/isAuthenticated.js";
@@ -9,7 +9,7 @@ import { addNewFolder } from "../lib/queries.js";
 const newFolder = {
     post: [
         isAuthenticated,
-        validateNewFolder(),
+        validateNewFile(),
         asyncHandler(async (req, res, next) => {
             if (!validationResult(req).isEmpty()) {
                 next(new HttpError("Bad Request", "Invalid input", 400));
