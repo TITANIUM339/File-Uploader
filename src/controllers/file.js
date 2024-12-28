@@ -1,5 +1,5 @@
 import multer from "multer";
-import { validateNewFile } from "../lib/validation.js";
+import { validateDownload, validateNewFile } from "../lib/validation.js";
 import isAuthenticated from "../lib/isAuthenticated.js";
 import asyncHandler from "express-async-handler";
 import { matchedData, validationResult } from "express-validator";
@@ -7,7 +7,8 @@ import HttpError from "../lib/HttpError.js";
 import prisma from "../lib/client.js";
 import { arrayToJsonpath } from "../lib/pathUtilities.js";
 import { unlink } from "fs/promises";
-import { pathExists, addNewFile } from "../lib/queries.js";
+import { pathExists, addNewFile, getFiles } from "../lib/queries.js";
+import nodePath from "path";
 
 const upload = multer({ dest: "uploads" });
 
@@ -48,4 +49,40 @@ const newFile = {
     ],
 };
 
-export { newFile };
+const download = {
+    post: [
+        isAuthenticated,
+        validateDownload(),
+        asyncHandler(async (req, res, next) => {
+            const { path } = matchedData(req);
+
+            if (
+                !validationResult(req).isEmpty() ||
+                !(
+                    await prisma.$queryRaw(
+                        pathExists(arrayToJsonpath(path), req.user.homeId),
+                    )
+                )[0].exists
+            ) {
+                next(new HttpError("Bad Request", "Invalid input", 400));
+
+                return;
+            }
+
+            const [result] = await prisma.$queryRaw(
+                getFiles(arrayToJsonpath(path), req.user.homeId),
+            );
+
+            const { items: file } = result;
+
+            res.download(
+                nodePath.resolve(file.$location),
+                file.$extension
+                    ? `${path[path.length - 1]}.${file.$extension}`
+                    : path[path.length - 1],
+            );
+        }),
+    ],
+};
+
+export { newFile, download };
