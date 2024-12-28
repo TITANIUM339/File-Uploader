@@ -64,6 +64,7 @@ const file = {
         const { items: file } = result;
 
         res.render("file", {
+            path: req.path,
             breadcrumb: ["home", ...path],
             file: {
                 name: path[path.length - 1],
