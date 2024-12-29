@@ -7,7 +7,12 @@ import HttpError from "../lib/HttpError.js";
 import prisma from "../lib/client.js";
 import { arrayToJsonpath } from "../lib/pathUtilities.js";
 import { unlink } from "fs/promises";
-import { pathExists, addNewFile, getFiles } from "../lib/queries.js";
+import {
+    pathExists,
+    addNewFile,
+    getFiles,
+    removeFile,
+} from "../lib/queries.js";
 import nodePath from "path";
 
 const upload = multer({ dest: "uploads" });
@@ -85,4 +90,34 @@ const download = {
     ],
 };
 
-export { newFile, download };
+const deleteFile = {
+    post: [
+        isAuthenticated,
+        validateDownload(),
+        asyncHandler(async (req, res, next) => {
+            const { path } = matchedData(req);
+
+            if (!validationResult(req).isEmpty()) {
+                next(new HttpError("Bad Request", "Invalid input", 400));
+
+                return;
+            }
+
+            const [result] = await prisma.$queryRaw(
+                getFiles(arrayToJsonpath(path), req.user.homeId),
+            );
+
+            if (result) {
+                const { items: file } = result;
+
+                file.$location && (await unlink(file.$location));
+
+                await prisma.$executeRaw(removeFile(path, req.user.homeId));
+            }
+
+            res.redirect(`/home/${path.slice(0, path.length - 1).join("/")}`);
+        }),
+    ],
+};
+
+export { newFile, download, deleteFile };
