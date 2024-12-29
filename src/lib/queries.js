@@ -66,4 +66,8 @@ function isFolder(arrayPath, id) {
     return Prisma.sql`SELECT COALESCE(folder #>> ${[...arrayPath, "$type"]}::text[], 'folder') = 'folder' AS folder FROM "Home" WHERE id = ${id}`;
 }
 
-export { pathExists, addNewFile, addNewFolder, getFiles, isFolder };
+function removeFile(arrayFilePath, id) {
+    return Prisma.sql`UPDATE "Home" SET folder = folder #- ${arrayFilePath}::text[] WHERE id = ${id}`;
+}
+
+export { pathExists, addNewFile, addNewFolder, getFiles, isFolder, removeFile };
