@@ -1,12 +1,16 @@
 /* eslint-disable no-undef */
-document.querySelectorAll(".sidebar-button").forEach((button, index) => {
-    const dialog = document.querySelectorAll("dialog")[index];
+document
+    .querySelectorAll('.sidebar-button[type="button"]')
+    .forEach((button, index) => {
+        const dialog = document.querySelectorAll("dialog")[index];
 
-    button.addEventListener("click", () => dialog.showModal());
+        button.addEventListener("click", () => dialog.showModal());
 
-    dialog
-        .querySelector(".secondary-button")
-        .addEventListener("click", () => dialog.close());
+        dialog
+            .querySelector(".secondary-button")
+            .addEventListener("click", () => dialog.close());
 
-    dialog.querySelector("form").addEventListener("submit", () => dialog.close());
-});
+        dialog
+            .querySelector("form")
+            .addEventListener("submit", () => dialog.close());
+    });
