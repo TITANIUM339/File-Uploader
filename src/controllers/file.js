@@ -1,5 +1,5 @@
 import multer from "multer";
-import { validateDownload, validateNewFile } from "../lib/validation.js";
+import { validatePath, validateNewFile } from "../lib/validation.js";
 import isAuthenticated from "../lib/isAuthenticated.js";
 import asyncHandler from "express-async-handler";
 import { matchedData, validationResult } from "express-validator";
@@ -57,7 +57,7 @@ const newFile = {
 const download = {
     post: [
         isAuthenticated,
-        validateDownload(),
+        validatePath(),
         asyncHandler(async (req, res, next) => {
             const { path } = matchedData(req);
 
@@ -93,7 +93,7 @@ const download = {
 const deleteFile = {
     post: [
         isAuthenticated,
-        validateDownload(),
+        validatePath(),
         asyncHandler(async (req, res, next) => {
             const { path } = matchedData(req);
 

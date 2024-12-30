@@ -59,25 +59,7 @@ function validateLogin() {
     ];
 }
 
-function validateNewFile() {
-    return [
-        body("name")
-            .trim()
-            .notEmpty()
-            .withMessage("Can't be empty")
-            .matches(NAME_PATTERN)
-            .withMessage("Contains a forbidden character"),
-        body("path")
-            .notEmpty()
-            .withMessage("Path can't be empty")
-            .matches(PATH_PATTERN)
-            .withMessage("Invalid path")
-            .bail()
-            .customSanitizer((value) => pathToArray(value)),
-    ];
-}
-
-function validateDownload() {
+function validatePath() {
     return body("path")
         .notEmpty()
         .withMessage("Path can't be empty")
@@ -87,4 +69,16 @@ function validateDownload() {
         .customSanitizer((value) => pathToArray(value));
 }
 
-export { validateSignup, validateLogin, validateNewFile, validateDownload };
+function validateNewFile() {
+    return [
+        body("name")
+            .trim()
+            .notEmpty()
+            .withMessage("Can't be empty")
+            .matches(NAME_PATTERN)
+            .withMessage("Contains a forbidden character"),
+        validatePath(),
+    ];
+}
+
+export { validateSignup, validateLogin, validateNewFile, validatePath };
