@@ -107,12 +107,13 @@ const deleteFile = {
                 getFiles(arrayToJsonpath(path), req.user.homeId),
             );
 
-            if (result) {
+            if (result && result.items.$type === "file") {
                 const { items: file } = result;
 
-                file.$location && (await unlink(file.$location));
-
-                await prisma.$executeRaw(removeFile(path, req.user.homeId));
+                await Promise.all([
+                    unlink(file.$location),
+                    prisma.$executeRaw(removeFile(path, req.user.homeId)),
+                ]);
             }
 
             res.redirect(`/home/${path.slice(0, path.length - 1).join("/")}`);
