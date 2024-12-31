@@ -95,19 +95,19 @@ const deleteFile = {
         isAuthenticated,
         validatePath(),
         asyncHandler(async (req, res, next) => {
-            const { path } = matchedData(req);
-
             if (!validationResult(req).isEmpty()) {
                 next(new HttpError("Bad Request", "Invalid input", 400));
 
                 return;
             }
 
+            const { path } = matchedData(req);
+
             const [result] = await prisma.$queryRaw(
                 getFiles(arrayToJsonpath(path), req.user.homeId),
             );
 
-            if (result && result.items.$type === "file") {
+            if (result?.items.$type === "file") {
                 const { items: file } = result;
 
                 await Promise.all([
