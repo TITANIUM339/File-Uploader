@@ -1,7 +1,8 @@
 <ol class="breadcrumb">
+    <li><a href="/home" class="link"><i class="bi bi-house" aria-hidden="true"></i>home</a></li>
     <% let current = [] %>
     <% for (let i = 0; i < breadcrumb.length; i++) { %>
         <% current.push(breadcrumb[i]) %>
-        <li><a href="/<%= current.join("/") %>" class="link"><%= breadcrumb[i] %></a></li>
+        <li><a href="/home/<%= current.join("/") %>" class="link"><%= breadcrumb[i] %></a></li>
     <% } %>
 </ol>

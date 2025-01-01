@@ -210,3 +210,8 @@ input::file-selector-button,
     padding: 0px 6px 0px 6px;
     content: ">";
 }
+
+.breadcrumb i {
+    font-size: 18px;
+    margin-right: 3px;
+}
