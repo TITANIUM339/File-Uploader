@@ -46,6 +46,7 @@ const folder = {
 
         res.render("folder", {
             path: req.path,
+            folderName: path[path.length - 1],
             breadcrumb: ["home", ...path],
             files: [...folders, ...files],
             namePattern: NAME_PATTERN.source,

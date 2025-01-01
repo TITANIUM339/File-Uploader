@@ -11,11 +11,16 @@
                 <button type="button" class="main-button sidebar-button" aria-label="New file">
                     <i class="bi bi-file-earmark-plus"></i> <span>New file</span>
                 </button>
+                <% if (folderName) { %>
+                    <button type="button" class="main-button sidebar-button" aria-label="Delete">
+                        <i class="bi bi-trash"></i> <span>Delete</span>
+                    </button>
+                    <button type="button" class="main-button sidebar-button" aria-label="Rename">
+                        <i class="bi bi-input-cursor-text"></i> <span>Rename</span>
+                    </button>
+                <% } %>
                 <button type="button" class="main-button sidebar-button" aria-label="Share">
                     <i class="bi bi-share"></i> <span>Share</span>
-                </button>
-                <button type="button" class="main-button sidebar-button" aria-label="Delete">
-                    <i class="bi bi-trash"></i> <span>Delete</span>
                 </button>
                 <dialog>
                     <section class="form-container">
@@ -53,6 +58,23 @@
                         </form>
                     </section>
                 </dialog>
+                <% if (folderName) { %>
+                    <dialog>
+                        <section class="form-container">
+                            <h1>Delete this folder</h1>
+                            <form action="/folder/delete-folder" method="post">
+                                <div>
+                                    <p>Are you sure you want to delete <%= folderName %>?</p>
+                                    <input type="hidden" name="path" value="<%= path %>">
+                                </div>
+                                <div class="button-container">
+                                    <button type="button" class="secondary-button">Cancel</button>
+                                    <button type="submit" class="main-button">Delete</button>
+                                </div>
+                            </form>
+                        </section>
+                    </dialog>
+                <% } %>
             </aside>
             <div class="files-container">
                 <%- include("./partials/breadcrumb.ejs") %>
