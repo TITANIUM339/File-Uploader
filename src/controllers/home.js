@@ -46,8 +46,7 @@ const folder = {
 
         res.render("folder", {
             path: req.path,
-            folderName: path[path.length - 1],
-            breadcrumb: ["home", ...path],
+            breadcrumb: path,
             files: [...folders, ...files],
             namePattern: NAME_PATTERN.source,
         });
@@ -66,7 +65,7 @@ const file = {
 
         res.render("file", {
             path: req.path,
-            breadcrumb: ["home", ...path],
+            breadcrumb: path,
             file: {
                 name: path[path.length - 1],
                 iconClassname: getIconClassname(file.$extension),

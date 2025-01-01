@@ -11,7 +11,7 @@
                 <button type="button" class="main-button sidebar-button" aria-label="New file">
                     <i class="bi bi-file-earmark-plus"></i> <span>New file</span>
                 </button>
-                <% if (folderName) { %>
+                <% if (breadcrumb.length) { %>
                     <button type="button" class="main-button sidebar-button" aria-label="Delete">
                         <i class="bi bi-trash"></i> <span>Delete</span>
                     </button>
@@ -58,13 +58,13 @@
                         </form>
                     </section>
                 </dialog>
-                <% if (folderName) { %>
+                <% if (breadcrumb.length) { %>
                     <dialog>
                         <section class="form-container">
                             <h1>Delete this folder</h1>
                             <form action="/folder/delete-folder" method="post">
                                 <div>
-                                    <p>Are you sure you want to delete <%= folderName %>?</p>
+                                    <p>Are you sure you want to delete <%= breadcrumb[breadcrumb.length - 1] %>?</p>
                                     <input type="hidden" name="path" value="<%= path %>">
                                 </div>
                                 <div class="button-container">
