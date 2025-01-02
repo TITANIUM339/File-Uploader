@@ -70,4 +70,38 @@ function removeFile(arrayFilePath, id) {
     return Prisma.sql`UPDATE "Home" SET folder = folder #- ${arrayFilePath}::text[] WHERE id = ${id}`;
 }
 
-export { pathExists, addNewFile, addNewFolder, getFiles, isFolder, removeFile };
+function renameFile(arrayFilePath, newName, id) {
+    const renameFile = `UPDATE "Home" SET folder = jsonb_insert(folder #- $1::text[], $2::text[], folder #> $1::text[]) WHERE id = $3`;
+    const fileExists = `AND jsonb_path_exists(folder, $5::jsonpath)`;
+    const isFileOrFolder = `AND folder #>> $6::text[] IN ('folder', 'file')`;
+
+    const newFilePath = [
+        ...arrayFilePath.slice(0, arrayFilePath.length - 1),
+        newName,
+    ];
+
+    const query = Prisma.raw(
+        `${renameFile} ${fileDoesNotAlreadyExist} ${fileExists} ${isFileOrFolder}`,
+    );
+
+    query.values = [
+        arrayFilePath,
+        newFilePath,
+        id,
+        arrayToJsonpath(newFilePath),
+        arrayToJsonpath(arrayFilePath),
+        [...arrayFilePath, "$type"],
+    ];
+
+    return query;
+}
+
+export {
+    pathExists,
+    addNewFile,
+    addNewFolder,
+    getFiles,
+    isFolder,
+    removeFile,
+    renameFile,
+};
