@@ -35,6 +35,22 @@
                         </form>
                     </section>
                 </dialog>
+                <dialog>
+                    <section class="form-container">
+                        <h1>Rename this file</h1>
+                        <form action="/file/rename" method="post">
+                            <div>
+                                <label for="file-name">Name *</label>
+                                <input type="text" id="file-name" name="name" autocomplete="off" pattern="<%= namePattern %>" title="Allowed characters (A-Z, a-z, 0-9, -, _, ~, .)" value="<%= file.name %>" autofocus required>
+                                <input type="hidden" name="path" value="<%= path %>">
+                            </div>
+                            <div class="button-container">
+                                <button type="button" class="secondary-button">Cancel</button>
+                                <button type="submit" class="main-button">Save</button>
+                            </div>
+                        </form>
+                    </section>
+                </dialog>
             </aside>
             <div class="files-container">
                 <%- include("./partials/breadcrumb.ejs") %>

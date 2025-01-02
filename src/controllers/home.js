@@ -66,6 +66,7 @@ const file = {
         res.render("file", {
             path: req.path,
             breadcrumb: path,
+            namePattern: NAME_PATTERN.source,
             file: {
                 name: path[path.length - 1],
                 iconClassname: getIconClassname(file.$extension),
