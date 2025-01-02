@@ -12,6 +12,7 @@ import {
     addNewFile,
     getFiles,
     removeFile,
+    renameFile,
 } from "../lib/queries.js";
 import nodePath from "path";
 
@@ -121,4 +122,26 @@ const deleteFile = {
     ],
 };
 
-export { newFile, download, deleteFile };
+const rename = {
+    post: [
+        isAuthenticated,
+        validateNewFile(),
+        asyncHandler(async (req, res, next) => {
+            if (!validationResult(req).isEmpty()) {
+                next(new HttpError("Bad Request", "Invalid input", 400));
+
+                return;
+            }
+
+            const { path, name } = matchedData(req);
+
+            await prisma.$executeRaw(renameFile(path, name, req.user.homeId));
+
+            res.redirect(
+                `/home/${[...path.slice(0, path.length - 1), name].join("/")}`,
+            );
+        }),
+    ],
+};
+
+export { newFile, download, deleteFile, rename };
