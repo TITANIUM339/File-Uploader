@@ -14,3 +14,7 @@ document
             .querySelector("form")
             .addEventListener("submit", () => dialog.close());
     });
+
+document
+    .querySelector('form[action="/file/rename"] input[type="text"]')
+    .addEventListener("focus", (event) => event.target.select());
