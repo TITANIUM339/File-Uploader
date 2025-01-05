@@ -8,17 +8,26 @@ datasource db {
 }
 
 model User {
-  id           Int    @id @default(autoincrement())
-  username     String @unique
+  id           Int     @id @default(autoincrement())
+  username     String  @unique
   passwordHash String
-  home         Home   @relation(fields: [homeId], references: [id])
-  homeId       Int    @unique
+  shares       Share[]
+  home         Home    @relation(fields: [homeId], references: [id])
+  homeId       Int     @unique
 }
 
 model Home {
   id     Int   @id @default(autoincrement())
   user   User?
   folder Json  @default("{}")
+}
+
+model Share {
+  id        String   @id @default(uuid())
+  path      String
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
 }
 
 model Session {
