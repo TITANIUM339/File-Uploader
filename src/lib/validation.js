@@ -81,4 +81,22 @@ function validateNewFile() {
     ];
 }
 
-export { validateSignup, validateLogin, validateNewFile, validatePath };
+function validateFileShare() {
+    return [
+        body("days")
+            .notEmpty()
+            .withMessage("Can't be empty")
+            .isIn(["1", "5", "10", "15"])
+            .bail()
+            .toInt(),
+        validatePath(),
+    ];
+}
+
+export {
+    validateSignup,
+    validateLogin,
+    validateNewFile,
+    validatePath,
+    validateFileShare,
+};
