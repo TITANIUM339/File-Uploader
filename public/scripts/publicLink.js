@@ -2,9 +2,13 @@
 (() => {
     const link = document.querySelector(".public-link-content");
 
-    link.innerText = `${window.location.origin}/share/${link.dataset.id}`
+    if (link) {
+        link.innerText = `${window.location.origin}/share/${link.dataset.id}`;
 
-    document
-        .querySelector(".public-link > button")
-        .addEventListener("click", () => navigator.clipboard.writeText(link.innerText));
+        document
+            .querySelector(".public-link > button")
+            .addEventListener("click", () =>
+                navigator.clipboard.writeText(link.innerText),
+            );
+    }
 })();

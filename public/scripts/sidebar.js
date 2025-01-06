@@ -17,4 +17,4 @@ document
 
 document
     .querySelector('form[action="/file/rename"] input[type="text"]')
-    .addEventListener("focus", (event) => event.target.select());
+    ?.addEventListener("focus", (event) => event.target.select());
