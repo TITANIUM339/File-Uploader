@@ -139,12 +139,17 @@ dialog[open]::backdrop {
     font-weight: 500;
 }
 
+.form-container h2 {
+    font-size: 1.1rem;
+}
+
 @media (max-width: 600px) {
     main {
         grid-template-columns: 1fr;
         grid-template-rows: min-content 1fr;
     }
 
+    .public-link button > span,
     .sidebar-button > span {
         display: none;
     }

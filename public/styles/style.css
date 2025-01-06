@@ -183,7 +183,7 @@ input::file-selector-button,
     font-weight: 500;
 }
 
-.form-container input {
+.form-container input:not(input[type="radio"]) {
     color: inherit;
     background-color: #0a0a0a;
     border: var(--border);
@@ -194,6 +194,16 @@ input::file-selector-button,
 
 .form-container .error {
     color: #b91c1c;
+}
+
+.form-container .radio-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+input[type="radio"] {
+    margin-right: 3px;
 }
 
 .breadcrumb {
@@ -214,4 +224,37 @@ input::file-selector-button,
 .breadcrumb i {
     font-size: 18px;
     margin-right: 3px;
+}
+
+.public-link-container {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    border: var(--border);
+    border-radius: 5px;
+}
+
+.public-link-container #label {
+    padding: 5px;
+    background-color: #1e293b;
+    display: flex;
+    align-items: center;
+}
+
+.public-link-container .public-link {
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    gap: 5px;
+    padding: 5px;
+}
+
+.public-link-container .public-link-content {
+    display: flex;
+    align-items: center;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.public-link-container i {
+    font-size: 18px;
 }
