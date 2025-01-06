@@ -1,5 +1,9 @@
 import multer from "multer";
-import { validatePath, validateNewFile } from "../lib/validation.js";
+import {
+    validatePath,
+    validateNewFile,
+    validateFileShare,
+} from "../lib/validation.js";
 import isAuthenticated from "../lib/isAuthenticated.js";
 import asyncHandler from "express-async-handler";
 import { matchedData, validationResult } from "express-validator";
@@ -13,8 +17,11 @@ import {
     getFiles,
     removeFile,
     renameFile,
+    setFileShareId,
+    isFileShared,
 } from "../lib/queries.js";
 import nodePath from "path";
+import { UTCDate } from "@date-fns/utc";
 
 const upload = multer({ dest: "uploads" });
 
@@ -144,4 +151,45 @@ const rename = {
     ],
 };
 
-export { newFile, download, deleteFile, rename };
+const share = {
+    post: [
+        isAuthenticated,
+        validateFileShare(),
+        asyncHandler(async (req, res, next) => {
+            const { path, days } = matchedData(req);
+
+            if (
+                !validationResult(req).isEmpty() ||
+                !(
+                    await prisma.$queryRaw(
+                        pathExists(arrayToJsonpath(path), req.user.homeId),
+                    )
+                )[0].exists ||
+                (await prisma.$queryRaw(isFileShared(path, req.user.homeId)))[0]
+                    .shared
+            ) {
+                next(new HttpError("Bad Request", "Invalid input", 400));
+
+                return;
+            }
+
+            const date = new UTCDate();
+
+            date.setDate(date.getDate() + days);
+
+            const { id } = await prisma.share.create({
+                data: {
+                    path: `/${path.join("/")}`,
+                    expiresAt: date,
+                    userId: req.user.id,
+                },
+            });
+
+            await prisma.$executeRaw(setFileShareId(path, id, req.user.homeId));
+
+            res.redirect(`/home/${path.join("/")}`);
+        }),
+    ],
+};
+
+export { newFile, download, deleteFile, rename, share };
