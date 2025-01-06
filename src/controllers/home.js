@@ -49,6 +49,7 @@ const folder = {
             breadcrumb: path,
             files: [...folders, ...files],
             namePattern: NAME_PATTERN.source,
+            shareId: items.$shareId,
         });
     }),
 };
@@ -67,6 +68,7 @@ const file = {
             path: req.path,
             breadcrumb: path,
             namePattern: NAME_PATTERN.source,
+            shareId: file.$shareId,
             file: {
                 name: path[path.length - 1],
                 iconClassname: getIconClassname(file.$extension),

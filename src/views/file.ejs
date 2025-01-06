@@ -75,7 +75,12 @@
                 </dialog>
             </aside>
             <div class="files-container">
-                <%- include("./partials/breadcrumb.ejs") %>
+                <div>
+                    <%- include("./partials/breadcrumb.ejs") %>
+                    <% if (shareId) { %>
+                        <%- include("./partials/publicLink.ejs") %>
+                    <% } %>
+                </div>
                 <div class="file-container">
                     <div class="icon-container">
                         <i class="<%= file.iconClassname %>" aria-hidden="true"></i>
@@ -97,5 +102,6 @@
         <%- include("./partials/footer.ejs") %>
         <script src="/scripts/sidebar.js"></script>
         <script src="/scripts/timeZone.js"></script>
+        <script src="/scripts/publicLink.js"></script>
     </body>
 </html>
