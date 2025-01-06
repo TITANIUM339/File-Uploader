@@ -96,6 +96,10 @@ function renameFile(arrayFilePath, newName, id) {
     return query;
 }
 
+function setFileShareId(arrayFilePath, shareId, id) {
+    return Prisma.sql`UPDATE "Home" SET folder = jsonb_set(folder, ${[...arrayFilePath, "$shareId"]}::text[], ${`"${shareId}"`}::jsonb) WHERE id = ${id}`;
+}
+
 export {
     pathExists,
     addNewFile,
@@ -104,4 +108,5 @@ export {
     isFolder,
     removeFile,
     renameFile,
+    setFileShareId,
 };
