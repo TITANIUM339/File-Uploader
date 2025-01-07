@@ -143,6 +143,10 @@ dialog[open]::backdrop {
     font-size: 1.1rem;
 }
 
+form .sidebar-button {
+    width: 100%;
+}
+
 @media (max-width: 600px) {
     main {
         grid-template-columns: 1fr;
