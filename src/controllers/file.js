@@ -3,13 +3,14 @@ import {
     validatePath,
     validateNewFile,
     validateFileShare,
+    validateStopFileShare,
 } from "../lib/validation.js";
 import isAuthenticated from "../lib/isAuthenticated.js";
 import asyncHandler from "express-async-handler";
 import { matchedData, validationResult } from "express-validator";
 import HttpError from "../lib/HttpError.js";
 import prisma from "../lib/client.js";
-import { arrayToJsonpath } from "../lib/pathUtilities.js";
+import { arrayToJsonpath, pathToArray } from "../lib/pathUtilities.js";
 import { unlink } from "fs/promises";
 import {
     pathExists,
@@ -19,6 +20,7 @@ import {
     renameFile,
     setFileShareId,
     isFileShared,
+    removeFileShareId,
 } from "../lib/queries.js";
 import nodePath from "path";
 import { UTCDate } from "@date-fns/utc";
@@ -196,4 +198,37 @@ const share = {
     ],
 };
 
-export { newFile, download, deleteFile, rename, share };
+const stopSharing = {
+    post: [
+        isAuthenticated,
+        validateStopFileShare(),
+        asyncHandler(async (req, res, next) => {
+            if (!validationResult(req).isEmpty()) {
+                next(new HttpError("Bad Request", "Invalid input", 400));
+
+                return;
+            }
+
+            const { id } = matchedData(req);
+
+            const share = await prisma.share.findUnique({
+                where: { id, userId: req.user.id },
+            });
+
+            share &&
+                (await prisma.$transaction([
+                    prisma.share.delete({ where: { id, userId: req.user.id } }),
+                    prisma.$executeRaw(
+                        removeFileShareId(
+                            pathToArray(share.path),
+                            req.user.homeId,
+                        ),
+                    ),
+                ]));
+
+            res.redirect(`/home${share?.path || ""}`);
+        }),
+    ],
+};
+
+export { newFile, download, deleteFile, rename, share, stopSharing };
