@@ -54,11 +54,17 @@ const deleteFolder = {
                 const stack = [folder];
 
                 const filesToDelete = [];
+                const sharesToDelete = [];
+
+                folder.$shareId && sharesToDelete.push(folder.$shareId);
 
                 while (stack.length) {
                     const currentFolder = stack.pop();
 
                     Object.keys(currentFolder).forEach((item) => {
+                        currentFolder[item].$shareId &&
+                            sharesToDelete.push(currentFolder[item].$shareId);
+
                         if (currentFolder[item].$type === "folder") {
                             stack.push(currentFolder[item]);
                         } else if (currentFolder[item].$type === "file") {
@@ -70,6 +76,9 @@ const deleteFolder = {
                 await Promise.all([
                     ...filesToDelete.map((file) => unlink(file)),
                     prisma.$executeRaw(removeFile(path, req.user.homeId)),
+                    prisma.share.deleteMany({
+                        where: { id: { in: sharesToDelete } },
+                    }),
                 ]);
             }
 
