@@ -104,6 +104,10 @@ function isFileShared(arrayPath, id) {
     return Prisma.sql`SELECT folder #>> ${[...arrayPath, "$shareId"]}::text[] IS NOT NULL AS shared FROM "Home" WHERE id = ${id}`;
 }
 
+function removeFileShareId(arrayPath, id) {
+    return removeFile([...arrayPath, "$shareId"], id);
+}
+
 export {
     pathExists,
     addNewFile,
@@ -114,4 +118,5 @@ export {
     renameFile,
     setFileShareId,
     isFileShared,
+    removeFileShareId,
 };
