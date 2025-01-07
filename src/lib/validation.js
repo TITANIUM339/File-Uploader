@@ -93,10 +93,15 @@ function validateFileShare() {
     ];
 }
 
+function validateStopFileShare() {
+    return body("id").notEmpty().withMessage("Can't be empty").isUUID();
+}
+
 export {
     validateSignup,
     validateLogin,
     validateNewFile,
     validatePath,
     validateFileShare,
+    validateStopFileShare,
 };
