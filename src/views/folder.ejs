@@ -91,6 +91,28 @@
                         </section>
                     </dialog>
                 <% } %>
+                <dialog>
+                    <section class="form-container">
+                        <h1>Share this folder</h1>
+                        <form action="/file/share" method="post">
+                            <div>
+                                <h2>Duration</h2>
+                                <div class="radio-container">
+                                    <label><input type="radio" name="days" value="1" required>1 Day</label>
+                                    <label><input type="radio" name="days" value="5">5 Days</label>
+                                    <label><input type="radio" name="days" value="10">10 Days</label>
+                                    <label><input type="radio" name="days" value="15">15 Days</label>
+                                </div>
+                                <input type="hidden" name="path" value="<%= path %>">
+                            </div>
+                            <p>Link will expire after specified duration</p>
+                            <div class="button-container">
+                                <button type="button" class="secondary-button">Cancel</button>
+                                <button type="submit" class="main-button">Save</button>
+                            </div>
+                        </form>
+                    </section>
+                </dialog>
             </aside>
             <div class="files-container">
                 <%- include("./partials/breadcrumb.ejs") %>
