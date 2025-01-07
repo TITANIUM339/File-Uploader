@@ -121,6 +121,10 @@ const deleteFile = {
                 await Promise.all([
                     unlink(file.$location),
                     prisma.$executeRaw(removeFile(path, req.user.homeId)),
+                    file.$shareId &&
+                        prisma.share.delete({
+                            where: { id: file.$shareId },
+                        }),
                 ]);
             }
 
