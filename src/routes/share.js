@@ -77,6 +77,6 @@ router.get(
     }),
     folder.get,
 );
-router.get(PATH_PATTERN, file.get);
+router.route(PATH_PATTERN).get(file.get).post(file.post);
 
 export default router;
