@@ -16,6 +16,7 @@ import HttpError from "./lib/HttpError.js";
 import homeRouter from "./routes/home.js";
 import folderRouter from "./routes/folder.js";
 import fileRouter from "./routes/file.js";
+import shareRouter from "./routes/share.js";
 
 const PORT = process.env.PORT || 80;
 
@@ -95,6 +96,7 @@ app.use("/log-out", logoutRouter);
 app.use("/home", homeRouter);
 app.use("/folder", folderRouter);
 app.use("/file", fileRouter);
+app.use("/share", shareRouter);
 
 app.use((req, res, next) =>
     next(
