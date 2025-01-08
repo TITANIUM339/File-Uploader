@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { folder } from "../controllers/share.js";
+import { file, folder } from "../controllers/share.js";
 import { PATH_PATTERN } from "../lib/constants.js";
 import asyncHandler from "express-async-handler";
 import prisma from "../lib/client.js";
@@ -61,8 +61,6 @@ router.get(
             ...pathToArray(req.path).slice(1),
         ];
 
-        console.log(path);
-
         const [result] = await prisma.$queryRaw(
             isFolder(path, res.locals.homeId),
         );
@@ -79,5 +77,6 @@ router.get(
     }),
     folder.get,
 );
+router.get(PATH_PATTERN, file.get);
 
 export default router;
