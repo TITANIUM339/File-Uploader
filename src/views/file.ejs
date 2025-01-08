@@ -5,103 +5,105 @@
         <%- include("./partials/header.ejs") %>
         <main>
             <aside>
-                <form action="/file/download" method="post">
+                <form action="<%= locals.restricted ? path : "/file/download" %>" method="post">
                     <input type="hidden" name="path" value="<%= path %>">
                     <button type="submit" class="main-button sidebar-button" aria-label="Download">
                         <i class="bi bi-file-earmark-arrow-down"></i> <span>Download</span>
                     </button>
                 </form>
-                <button type="button" class="main-button sidebar-button" aria-label="Delete">
-                    <i class="bi bi-trash"></i> <span>Delete</span>
-                </button>
-                <button type="button" class="main-button sidebar-button" aria-label="Rename">
-                    <i class="bi bi-input-cursor-text"></i> <span>Rename</span>
-                </button>
-                <% if (shareId) { %>
-                    <button type="button" class="main-button sidebar-button" aria-label="Stop sharing">
-                        <i class="bi bi-x-lg"></i> <span>Stop sharing</span>
+                <% if (!locals.restricted) { %>
+                    <button type="button" class="main-button sidebar-button" aria-label="Delete">
+                        <i class="bi bi-trash"></i> <span>Delete</span>
                     </button>
-                <% } else { %>  
-                    <button type="button" class="main-button sidebar-button" aria-label="Share">
-                        <i class="bi bi-share"></i> <span>Share</span>
+                    <button type="button" class="main-button sidebar-button" aria-label="Rename">
+                        <i class="bi bi-input-cursor-text"></i> <span>Rename</span>
                     </button>
-                <% } %>
-                <dialog>
-                    <section class="form-container">
-                        <h1>Delete this file</h1>
-                        <form action="/file/delete-file" method="post">
-                            <div>
-                                <p>Are you sure you want to delete <%= file.name %>?</p>
-                                <input type="hidden" name="path" value="<%= path %>">
-                            </div>
-                            <div class="button-container">
-                                <button type="button" class="secondary-button">Cancel</button>
-                                <button type="submit" class="main-button">Delete</button>
-                            </div>
-                        </form>
-                    </section>
-                </dialog>
-                <dialog>
-                    <section class="form-container">
-                        <h1>Rename this file</h1>
-                        <form action="/file/rename" method="post">
-                            <div>
-                                <label for="file-name">Name *</label>
-                                <input type="text" id="file-name" name="name" autocomplete="off" pattern="<%= namePattern %>" title="Allowed characters (A-Z, a-z, 0-9, -, _, ~, .)" value="<%= file.name %>" autofocus required>
-                                <input type="hidden" name="path" value="<%= path %>">
-                            </div>
-                            <div class="button-container">
-                                <button type="button" class="secondary-button">Cancel</button>
-                                <button type="submit" class="main-button">Save</button>
-                            </div>
-                        </form>
-                    </section>
-                </dialog>
-                <% if (shareId) { %>
+                    <% if (shareId) { %>
+                        <button type="button" class="main-button sidebar-button" aria-label="Stop sharing">
+                            <i class="bi bi-x-lg"></i> <span>Stop sharing</span>
+                        </button>
+                    <% } else { %>  
+                        <button type="button" class="main-button sidebar-button" aria-label="Share">
+                            <i class="bi bi-share"></i> <span>Share</span>
+                        </button>
+                    <% } %>
                     <dialog>
                         <section class="form-container">
-                            <h1>Stop sharing this file</h1>
-                            <form action="/file/stop-sharing" method="post">
+                            <h1>Delete this file</h1>
+                            <form action="/file/delete-file" method="post">
                                 <div>
-                                    <p>Are you sure you want to stop sharing <%= file.name %>?</p>
-                                    <input type="hidden" name="id" value="<%= shareId %>">
-                                </div>
-                                <div class="button-container">
-                                    <button type="button" class="secondary-button">Cancel</button>
-                                    <button type="submit" class="main-button">Stop sharing</button>
-                                </div>
-                            </form>
-                        </section>
-                    </dialog>
-                <% } else { %>
-                    <dialog>
-                        <section class="form-container">
-                            <h1>Share this file</h1>
-                            <form action="/file/share" method="post">
-                                <div>
-                                    <h2>Duration</h2>
-                                    <div class="radio-container">
-                                        <label><input type="radio" name="days" value="1" required>1 Day</label>
-                                        <label><input type="radio" name="days" value="5">5 Days</label>
-                                        <label><input type="radio" name="days" value="10">10 Days</label>
-                                        <label><input type="radio" name="days" value="15">15 Days</label>
-                                    </div>
+                                    <p>Are you sure you want to delete <%= file.name %>?</p>
                                     <input type="hidden" name="path" value="<%= path %>">
                                 </div>
-                                <p>Link will expire after specified duration</p>
                                 <div class="button-container">
                                     <button type="button" class="secondary-button">Cancel</button>
-                                    <button type="submit" class="main-button">Share</button>
+                                    <button type="submit" class="main-button">Delete</button>
                                 </div>
                             </form>
                         </section>
                     </dialog>
+                    <dialog>
+                        <section class="form-container">
+                            <h1>Rename this file</h1>
+                            <form action="/file/rename" method="post">
+                                <div>
+                                    <label for="file-name">Name *</label>
+                                    <input type="text" id="file-name" name="name" autocomplete="off" pattern="<%= namePattern %>" title="Allowed characters (A-Z, a-z, 0-9, -, _, ~, .)" value="<%= file.name %>" autofocus required>
+                                    <input type="hidden" name="path" value="<%= path %>">
+                                </div>
+                                <div class="button-container">
+                                    <button type="button" class="secondary-button">Cancel</button>
+                                    <button type="submit" class="main-button">Save</button>
+                                </div>
+                            </form>
+                        </section>
+                    </dialog>
+                    <% if (shareId) { %>
+                        <dialog>
+                            <section class="form-container">
+                                <h1>Stop sharing this file</h1>
+                                <form action="/file/stop-sharing" method="post">
+                                    <div>
+                                        <p>Are you sure you want to stop sharing <%= file.name %>?</p>
+                                        <input type="hidden" name="id" value="<%= shareId %>">
+                                    </div>
+                                    <div class="button-container">
+                                        <button type="button" class="secondary-button">Cancel</button>
+                                        <button type="submit" class="main-button">Stop sharing</button>
+                                    </div>
+                                </form>
+                            </section>
+                        </dialog>
+                    <% } else { %>
+                        <dialog>
+                            <section class="form-container">
+                                <h1>Share this file</h1>
+                                <form action="/file/share" method="post">
+                                    <div>
+                                        <h2>Duration</h2>
+                                        <div class="radio-container">
+                                            <label><input type="radio" name="days" value="1" required>1 Day</label>
+                                            <label><input type="radio" name="days" value="5">5 Days</label>
+                                            <label><input type="radio" name="days" value="10">10 Days</label>
+                                            <label><input type="radio" name="days" value="15">15 Days</label>
+                                        </div>
+                                        <input type="hidden" name="path" value="<%= path %>">
+                                    </div>
+                                    <p>Link will expire after specified duration</p>
+                                    <div class="button-container">
+                                        <button type="button" class="secondary-button">Cancel</button>
+                                        <button type="submit" class="main-button">Share</button>
+                                    </div>
+                                </form>
+                            </section>
+                        </dialog>
+                    <% } %>
                 <% } %>
             </aside>
             <div class="files-container">
                 <div>
                     <%- include("./partials/breadcrumb.ejs") %>
-                    <% if (shareId) { %>
+                    <% if (!locals.restricted && shareId) { %>
                         <%- include("./partials/publicLink.ejs") %>
                     <% } %>
                 </div>
@@ -124,8 +126,12 @@
             </div>
         </main>
         <%- include("./partials/footer.ejs") %>
-        <script src="/scripts/sidebar.js"></script>
         <script src="/scripts/timeZone.js"></script>
-        <script src="/scripts/publicLink.js"></script>
+        <% if (!locals.restricted) { %>
+            <script src="/scripts/sidebar.js"></script>
+        <% } %>
+        <% if (!locals.restricted && shareId) { %>
+            <script src="/scripts/publicLink.js"></script>
+        <% } %>
     </body>
 </html>
