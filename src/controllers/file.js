@@ -21,6 +21,7 @@ import {
     setFileShareId,
     isFileShared,
     removeFileShareId,
+    isFolder,
 } from "../lib/queries.js";
 import nodePath from "path";
 import { UTCDate } from "@date-fns/utc";
@@ -73,11 +74,8 @@ const download = {
 
             if (
                 !validationResult(req).isEmpty() ||
-                !(
-                    await prisma.$queryRaw(
-                        pathExists(arrayToJsonpath(path), req.user.homeId),
-                    )
-                )[0].exists
+                (await prisma.$queryRaw(isFolder(path, req.user.homeId)))[0]
+                    .folder
             ) {
                 next(new HttpError("Bad Request", "Invalid input", 400));
 
