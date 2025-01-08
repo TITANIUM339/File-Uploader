@@ -3,6 +3,9 @@ import { pathToArray, arrayToJsonpath } from "../lib/pathUtilities.js";
 import getIconClassname from "../lib/getIconClassname.js";
 import { getFiles } from "../lib/queries.js";
 import prisma from "../lib/client.js";
+import HttpError from "../lib/HttpError.js";
+import { isFolder } from "../lib/queries.js";
+import nodePath from "path";
 
 const folder = {
     get: asyncHandler(async (req, res) => {
@@ -70,7 +73,7 @@ const file = {
 
         res.render("file", {
             restricted: true,
-            path: req.path,
+            path: `/share${req.path}`,
             root: `/share/${res.locals.shareId}`,
             breadcrumb: pathToArray(req.path).slice(1),
             file: {
@@ -81,6 +84,34 @@ const file = {
                 type: file.$mimeType,
             },
         });
+    }),
+    post: asyncHandler(async (req, res, next) => {
+        const path = [
+            ...pathToArray(res.locals.sharePath),
+            ...pathToArray(req.path).slice(1),
+        ];
+
+        if (
+            (await prisma.$queryRaw(isFolder(path, res.locals.homeId)))[0]
+                .folder
+        ) {
+            next(new HttpError("Bad Request", "Invalid input", 400));
+
+            return;
+        }
+
+        const [result] = await prisma.$queryRaw(
+            getFiles(arrayToJsonpath(path), req.user.homeId),
+        );
+
+        const { items: file } = result;
+
+        res.download(
+            nodePath.resolve(file.$location),
+            file.$extension
+                ? `${path[path.length - 1]}.${file.$extension}`
+                : path[path.length - 1],
+        );
     }),
 };
 
