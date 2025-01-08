@@ -6,7 +6,9 @@
         <main>
             <aside>
                 <form action="<%= locals.restricted ? path : "/file/download" %>" method="post">
-                    <input type="hidden" name="path" value="<%= path %>">
+                    <% if (!locals.restricted) { %>
+                        <input type="hidden" name="path" value="<%= path %>">
+                    <% } %>
                     <button type="submit" class="main-button sidebar-button" aria-label="Download">
                         <i class="bi bi-file-earmark-arrow-down"></i> <span>Download</span>
                     </button>
