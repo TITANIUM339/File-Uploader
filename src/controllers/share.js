@@ -55,4 +55,33 @@ const folder = {
     }),
 };
 
-export { folder };
+const file = {
+    get: asyncHandler(async (req, res) => {
+        const path = [
+            ...pathToArray(res.locals.sharePath),
+            ...pathToArray(req.path).slice(1),
+        ];
+
+        const [result] = await prisma.$queryRaw(
+            getFiles(arrayToJsonpath(path), res.locals.homeId),
+        );
+
+        const { items: file } = result;
+
+        res.render("file", {
+            restricted: true,
+            path: req.path,
+            root: `/share/${res.locals.shareId}`,
+            breadcrumb: pathToArray(req.path).slice(1),
+            file: {
+                name: path[path.length - 1],
+                iconClassname: getIconClassname(file.$extension),
+                date: file.$date,
+                size: file.$size,
+                type: file.$mimeType,
+            },
+        });
+    }),
+};
+
+export { folder, file };
