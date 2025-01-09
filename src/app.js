@@ -17,6 +17,9 @@ import homeRouter from "./routes/home.js";
 import folderRouter from "./routes/folder.js";
 import fileRouter from "./routes/file.js";
 import shareRouter from "./routes/share.js";
+import { UTCDate } from "@date-fns/utc";
+import { removeFileShareId } from "./lib/queries.js";
+import { pathToArray } from "./lib/pathUtilities.js";
 
 const PORT = process.env.PORT || 80;
 
@@ -28,6 +31,42 @@ app.set("views", path.join(import.meta.dirname, "views"));
 app.use(helmet());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.resolve("public")));
+
+setInterval(
+    async () => {
+        const now = new UTCDate();
+
+        try {
+            const shares = await prisma.share.findMany({
+                where: { expiresAt: { lte: now } },
+                include: { user: true },
+            });
+
+            if (!shares.length) {
+                return;
+            }
+
+            await prisma.$transaction(async (tx) => {
+                for (const share of shares) {
+                    await tx.$executeRaw(
+                        removeFileShareId(
+                            pathToArray(share.path),
+                            share.user.homeId,
+                        ),
+                    );
+                }
+
+                await tx.share.deleteMany({
+                    where: { expiresAt: { lte: now } },
+                });
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    },
+    // 2 minutes
+    2 * 60 * 1000,
+);
 
 app.use(
     session({
