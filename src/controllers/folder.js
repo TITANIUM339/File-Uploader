@@ -73,13 +73,17 @@ const deleteFolder = {
                     });
                 }
 
-                await Promise.all([
-                    ...filesToDelete.map((file) => unlink(file)),
-                    prisma.$executeRaw(removeFile(path, req.user.homeId)),
-                    prisma.share.deleteMany({
+                await prisma.$transaction(async (tx) => {
+                    await Promise.all(
+                        filesToDelete.map((file) => unlink(file)),
+                    );
+
+                    await tx.$executeRaw(removeFile(path, req.user.homeId));
+
+                    await tx.share.deleteMany({
                         where: { id: { in: sharesToDelete } },
-                    }),
-                ]);
+                    });
+                });
             }
 
             res.redirect(`/home/${path.slice(0, path.length - 1).join("/")}`);

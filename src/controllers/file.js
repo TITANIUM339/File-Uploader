@@ -46,19 +46,20 @@ const newFile = {
 
             const filePath = [...path, name];
 
-            const [[result], rows] = await Promise.all([
-                prisma.$queryRaw(
-                    pathExists(arrayToJsonpath(path), req.user.homeId),
-                ),
-                prisma.$executeRaw(
+            const [result] = await prisma.$queryRaw(
+                pathExists(arrayToJsonpath(path), req.user.homeId),
+            );
+
+            await prisma.$transaction(async (tx) => {
+                const rows = await tx.$executeRaw(
                     addNewFile(filePath, req.file, req.user.homeId),
-                ),
-            ]);
+                );
 
-            const { exists } = result;
+                const { exists } = result;
 
-            // Remove file if provided path doesn't exist or UPDATE query didn't change anything
-            (!exists || !rows) && (await unlink(req.file.path));
+                // Remove file if provided path doesn't exist or UPDATE query didn't change anything
+                (!exists || !rows) && (await unlink(req.file.path));
+            });
 
             res.redirect(`/home/${path.join("/")}`);
         }),
@@ -118,14 +119,16 @@ const deleteFile = {
             if (result?.items.$type === "file") {
                 const { items: file } = result;
 
-                await Promise.all([
-                    unlink(file.$location),
-                    prisma.$executeRaw(removeFile(path, req.user.homeId)),
+                await prisma.$transaction(async (tx) => {
+                    await unlink(file.$location);
+
+                    await tx.$executeRaw(removeFile(path, req.user.homeId));
+
                     file.$shareId &&
-                        prisma.share.delete({
+                        (await tx.share.delete({
                             where: { id: file.$shareId },
-                        }),
-                ]);
+                        }));
+                });
             }
 
             res.redirect(`/home/${path.slice(0, path.length - 1).join("/")}`);
@@ -181,15 +184,17 @@ const share = {
 
             date.setDate(date.getDate() + days);
 
-            const { id } = await prisma.share.create({
-                data: {
-                    path: `/${path.join("/")}`,
-                    expiresAt: date,
-                    userId: req.user.id,
-                },
-            });
+            await prisma.$transaction(async (tx) => {
+                const { id } = await tx.share.create({
+                    data: {
+                        path: `/${path.join("/")}`,
+                        expiresAt: date,
+                        userId: req.user.id,
+                    },
+                });
 
-            await prisma.$executeRaw(setFileShareId(path, id, req.user.homeId));
+                await tx.$executeRaw(setFileShareId(path, id, req.user.homeId));
+            });
 
             res.redirect(`/home/${path.join("/")}`);
         }),
