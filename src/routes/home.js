@@ -33,7 +33,9 @@ router.get(
     asyncHandler(async (req, res, next) => {
         const path = pathToArray(req.path);
 
-        const [result] = await prisma.$queryRaw(isFolder(path, req.user.homeId));
+        const [result] = await prisma.$queryRaw(
+            isFolder(path, req.user.homeId),
+        );
 
         const { folder } = result;
 
