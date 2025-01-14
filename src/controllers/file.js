@@ -11,7 +11,7 @@ import { matchedData, validationResult } from "express-validator";
 import HttpError from "../lib/HttpError.js";
 import prisma from "../lib/client.js";
 import { arrayToJsonpath, pathToArray } from "../lib/pathUtilities.js";
-import { unlink } from "fs/promises";
+import { unlink, rename as fsRename } from "fs/promises";
 import {
     pathExists,
     addNewFile,
@@ -26,7 +26,7 @@ import {
 import nodePath from "path";
 import { UTCDate } from "@date-fns/utc";
 
-const upload = multer({ dest: "uploads" });
+const upload = multer({ storage: multer.diskStorage({}) });
 
 const newFile = {
     post: [
@@ -35,8 +35,6 @@ const newFile = {
         validateNewFile(),
         asyncHandler(async (req, res, next) => {
             if (!validationResult(req).isEmpty() || !req.file) {
-                req.file && (await unlink(req.file.path));
-
                 next(new HttpError("Bad Request", "Invalid input", 400));
 
                 return;
@@ -46,20 +44,32 @@ const newFile = {
 
             const filePath = [...path, name];
 
-            const [result] = await prisma.$queryRaw(
-                pathExists(arrayToJsonpath(path), req.user.homeId),
-            );
+            const [[result1], [result2], [result3]] = await Promise.all([
+                prisma.$queryRaw(
+                    pathExists(arrayToJsonpath(path), req.user.homeId),
+                ),
+                prisma.$queryRaw(isFolder(path, req.user.homeId)),
+                prisma.$queryRaw(
+                    pathExists(arrayToJsonpath(filePath), req.user.homeId),
+                ),
+            ]);
 
-            await prisma.$transaction(async (tx) => {
-                const rows = await tx.$executeRaw(
-                    addNewFile(filePath, req.file, req.user.homeId),
-                );
+            result1.exists &&
+                result2.folder &&
+                !result3.exists &&
+                (await prisma.$transaction(async (tx) => {
+                    await tx.$executeRaw(
+                        addNewFile(filePath, req.file, req.user.homeId),
+                    );
 
-                const { exists } = result;
-
-                // Remove file if provided path doesn't exist or UPDATE query didn't change anything
-                (!exists || !rows) && (await unlink(req.file.path));
-            });
+                    await fsRename(
+                        req.file.path,
+                        nodePath.join(
+                            nodePath.resolve("uploads"),
+                            req.file.filename,
+                        ),
+                    );
+                }));
 
             res.redirect(`/home/${path.join("/")}`);
         }),

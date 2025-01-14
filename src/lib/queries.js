@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { UTCDate } from "@date-fns/utc";
 import { arrayToJsonpath } from "./pathUtilities.js";
+import path from "path";
 
 const addFile = `UPDATE "Home" SET folder = jsonb_insert(folder, $1::text[], $2::jsonb) WHERE id = $3`;
 const fileDoesNotAlreadyExist = `AND NOT jsonb_path_exists(folder, $4::jsonpath)`;
@@ -15,7 +16,7 @@ function addNewFile(arrayFilePath, file, id) {
         $type: "file",
         $mimeType: file.mimetype,
         $size: file.size,
-        $location: file.path,
+        $location: path.join(path.resolve("uploads"), file.filename),
         $extension:
             /^.+\.([A-Za-z0-9]+)$/.exec(file.originalname)?.[1].toLowerCase() ||
             null,
