@@ -10,13 +10,14 @@ function pathExists(jsonpath, id) {
     return Prisma.sql`SELECT jsonb_path_exists(folder, ${jsonpath}::jsonpath) AS exists FROM "Home" WHERE id = ${id}`;
 }
 
-function addNewFile(arrayFilePath, file, location, publicId, id) {
+function addNewFile(arrayFilePath, file, location, publicId, resourceType, id) {
     const newFile = {
         $type: "file",
         $mimeType: file.mimetype,
         $size: file.size,
         $location: location,
         $publicId: publicId,
+        $resourceType: resourceType,
         $extension:
             /^.+\.([A-Za-z0-9]+)$/.exec(file.originalname)?.[1].toLowerCase() ||
             null,

@@ -11,7 +11,6 @@ import { matchedData, validationResult } from "express-validator";
 import HttpError from "../lib/HttpError.js";
 import prisma from "../lib/client.js";
 import { arrayToJsonpath, pathToArray } from "../lib/pathUtilities.js";
-import { unlink } from "fs/promises";
 import cloudinary from "../lib/cloudinary.js";
 import {
     pathExists,
@@ -102,6 +101,7 @@ const newFile = {
                         req.file,
                         result.secure_url,
                         result.public_id,
+                        result.resource_type,
                         req.user.homeId,
                     ),
                 );
@@ -173,7 +173,10 @@ const deleteFile = {
                 const { items: file } = result;
 
                 await prisma.$transaction(async (tx) => {
-                    await unlink(file.$location);
+                    await cloudinary.uploader.destroy(file.$publicId, {
+                        resource_type: file.$resourceType,
+                        type: "authenticated",
+                    });
 
                     await tx.$executeRaw(removeFile(path, req.user.homeId));
 
