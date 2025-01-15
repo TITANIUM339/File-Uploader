@@ -135,12 +135,19 @@ const download = {
 
             const { items: file } = result;
 
-            res.download(
-                file.$location,
+            const { body } = await fetch(file.$location);
+
+            res.attachment(
                 file.$extension
                     ? `${path[path.length - 1]}.${file.$extension}`
                     : path[path.length - 1],
             );
+
+            for await (const chunk of body) {
+                res.write(chunk);
+            }
+
+            res.end();
         }),
     ],
 };

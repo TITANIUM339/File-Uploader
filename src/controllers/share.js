@@ -5,7 +5,6 @@ import { getFiles } from "../lib/queries.js";
 import prisma from "../lib/client.js";
 import HttpError from "../lib/HttpError.js";
 import { isFolder } from "../lib/queries.js";
-import nodePath from "path";
 
 const folder = {
     get: asyncHandler(async (req, res) => {
@@ -106,12 +105,19 @@ const file = {
 
         const { items: file } = result;
 
-        res.download(
-            nodePath.resolve(file.$location),
+        const { body } = await fetch(file.$location);
+
+        res.attachment(
             file.$extension
                 ? `${path[path.length - 1]}.${file.$extension}`
                 : path[path.length - 1],
         );
+
+        for await (const chunk of body) {
+            res.write(chunk);
+        }
+
+        res.end();
     }),
 };
 
