@@ -11,7 +11,8 @@ import { matchedData, validationResult } from "express-validator";
 import HttpError from "../lib/HttpError.js";
 import prisma from "../lib/client.js";
 import { arrayToJsonpath, pathToArray } from "../lib/pathUtilities.js";
-import { unlink, rename as fsRename } from "fs/promises";
+import { unlink } from "fs/promises";
+import cloudinary from "../lib/cloudinary.js";
 import {
     pathExists,
     addNewFile,
@@ -23,15 +24,36 @@ import {
     removeFileShareId,
     isFolder,
 } from "../lib/queries.js";
-import nodePath from "path";
 import { UTCDate } from "@date-fns/utc";
 
-const upload = multer({ storage: multer.diskStorage({}) });
+const upload = multer({
+    storage: multer.diskStorage({}),
+    limits: { fileSize: 100000000 },
+});
 
 const newFile = {
     post: [
         isAuthenticated,
-        upload.single("file"),
+        (req, res, next) => {
+            upload.single("file")(req, res, (error) => {
+                if (error instanceof multer.MulterError) {
+                    switch (error.code) {
+                        case "LIMIT_FILE_SIZE":
+                            next(
+                                new HttpError(
+                                    "Bad Request",
+                                    "File too large",
+                                    400,
+                                ),
+                            );
+
+                            return;
+                    }
+                }
+
+                next(error);
+            });
+        },
         validateNewFile(),
         asyncHandler(async (req, res, next) => {
             if (!validationResult(req).isEmpty() || !req.file) {
@@ -54,22 +76,36 @@ const newFile = {
                 ),
             ]);
 
-            result1.exists &&
-                result2.folder &&
-                !result3.exists &&
-                (await prisma.$transaction(async (tx) => {
-                    await tx.$executeRaw(
-                        addNewFile(filePath, req.file, req.user.homeId),
-                    );
+            if (result1.exists && result2.folder && !result3.exists) {
+                let result;
 
-                    await fsRename(
-                        req.file.path,
-                        nodePath.join(
-                            nodePath.resolve("uploads"),
-                            req.file.filename,
-                        ),
-                    );
-                }));
+                try {
+                    result = await cloudinary.uploader.upload(req.file.path, {
+                        type: "authenticated",
+                        resource_type: "auto",
+                    });
+                } catch (error) {
+                    if (error.http_code === 400) {
+                        next(
+                            new HttpError("Bad Request", "File too large", 400),
+                        );
+
+                        return;
+                    }
+
+                    throw error;
+                }
+
+                await prisma.$executeRaw(
+                    addNewFile(
+                        filePath,
+                        req.file,
+                        result.secure_url,
+                        result.public_id,
+                        req.user.homeId,
+                    ),
+                );
+            }
 
             res.redirect(`/home/${path.join("/")}`);
         }),
@@ -100,7 +136,7 @@ const download = {
             const { items: file } = result;
 
             res.download(
-                nodePath.resolve(file.$location),
+                file.$location,
                 file.$extension
                     ? `${path[path.length - 1]}.${file.$extension}`
                     : path[path.length - 1],
