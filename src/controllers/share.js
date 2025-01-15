@@ -101,7 +101,7 @@ const file = {
         }
 
         const [result] = await prisma.$queryRaw(
-            getFiles(arrayToJsonpath(path), req.user.homeId),
+            getFiles(arrayToJsonpath(path), res.locals.homeId),
         );
 
         const { items: file } = result;
