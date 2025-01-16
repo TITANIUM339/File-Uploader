@@ -7,7 +7,7 @@ import HttpError from "../lib/HttpError.js";
 import { addNewFolder, removeFile } from "../lib/queries.js";
 import { getFiles } from "../lib/queries.js";
 import { arrayToJsonpath } from "../lib/pathUtilities.js";
-import { unlink } from "fs/promises";
+import cloudinary from "../lib/cloudinary.js";
 
 const newFolder = {
     post: [
@@ -68,14 +68,22 @@ const deleteFolder = {
                         if (currentFolder[item].$type === "folder") {
                             stack.push(currentFolder[item]);
                         } else if (currentFolder[item].$type === "file") {
-                            filesToDelete.push(currentFolder[item].$location);
+                            filesToDelete.push({
+                                publicId: currentFolder[item].$publicId,
+                                resourceType: currentFolder[item].$resourceType,
+                            });
                         }
                     });
                 }
 
                 await prisma.$transaction(async (tx) => {
                     await Promise.all(
-                        filesToDelete.map((file) => unlink(file)),
+                        filesToDelete.map((file) =>
+                            cloudinary.uploader.destroy(file.publicId, {
+                                resource_type: file.resourceType,
+                                type: "authenticated",
+                            }),
+                        ),
                     );
 
                     await tx.$executeRaw(removeFile(path, req.user.homeId));
