@@ -4,8 +4,9 @@
     <body>
         <%- include("./partials/header.ejs") %>
         <main>
+            <%- include("./partials/loader.ejs") %>
             <aside>
-                <form action="<%= locals.restricted ? path : "/file/download" %>" method="post">
+                <form class="download" action="<%= locals.restricted ? path : "/file/download" %>" method="post">
                     <% if (!locals.restricted) { %>
                         <input type="hidden" name="path" value="<%= path %>">
                     <% } %>
@@ -128,6 +129,7 @@
             </div>
         </main>
         <%- include("./partials/footer.ejs") %>
+        <script src="/scripts/loader.js"></script>
         <script src="/scripts/timeZone.js"></script>
         <% if (!locals.restricted) { %>
             <script src="/scripts/sidebar.js"></script>

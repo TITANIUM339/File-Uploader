@@ -4,11 +4,13 @@
     <body>
         <%- include("./partials/header.ejs") %>
         <main>
+            <%- include("./partials/loader.ejs") %>
             <section>
                 <h1><%= error.statusCode %>: <%= error.name %></h1>
                 <p><%= error.message %></p>
             </section>
         </main>
         <%- include("./partials/footer.ejs") %>
+        <script src="/scripts/loader.js"></script>
     </body>
 </html>

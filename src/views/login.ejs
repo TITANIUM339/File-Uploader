@@ -4,6 +4,7 @@
     <body>
         <%- include("./partials/header.ejs") %>
         <main>
+            <%- include("./partials/loader.ejs") %>
             <section class="form-container">
                 <h1>Log in</h1>
                 <form action="/log-in" method="post">
@@ -27,5 +28,6 @@
             </section>
         </main>
         <%- include("./partials/footer.ejs") %>
+        <script src="/scripts/loader.js"></script>
     </body>
 </html>
